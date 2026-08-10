@@ -12,9 +12,9 @@ Desenvolver uma solução que permita aplicar conceitos de desenvolvimento de so
 
 - Murilo Vinícius Lima de Araújo
 - Lis
-- Ícaro
-- Jotapê
-- Enzo
+- Ícaro Assis Oliveira Maia
+- João Paulo de Oliveira Carneiro
+- Enzo Cabral Lopes
 
 ## Estrutura do Projeto
 
