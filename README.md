@@ -11,7 +11,11 @@ Desenvolver uma solução que permita aplicar conceitos de desenvolvimento de so
 ## Integrantes
 
 - Murilo Vinícius Lima de Araújo
+<<<<<<< HEAD
 - Lis
+=======
+- Lismara Santos Moreira
+>>>>>>> f982bbcd65b9cacd03775a7d36a4cd9aa35ee2dc
 - Ícaro Assis Oliveira Maia
 - João Paulo de Oliveira Carneiro
 - Enzo Cabral Lopes
