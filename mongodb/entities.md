@@ -400,3 +400,41 @@ Entrega 1 ── * Rastreamento
 
 Com isso dá para, nas próximas atividades, montar as collections e buscar: pedido do cliente, entrega do pedido, motorista da entrega, ocorrências da entrega.
 
+
+
+Embedded documents × collections
+
+
+---
+
+Não é “uma entidade = uma collection”. O critério é: **a tela lê isso junto?** e **isso cresce sem parar?**
+
+| Relacionamento                                   | Decisão                                       | Por quê                                                               |
+| ------------------------------------------------ | --------------------------------------------- | --------------------------------------------------------------------- |
+| Cliente → Endereço                               | Incorporado                                   | Sempre aparece junto no cadastro                                      |
+| Pedido → origem e destino                        | Incorporado                                   | Cópia do momento do pedido (não muda se o cliente alterar o cadastro) |
+| Pedido → Volumes                                 | Incorporado                                   | Poucos pacotes; o pedido precisa da carga inteira                     |
+| Pedido → Pagamento                               | Incorporado                                   | Um pagamento por pedido; lê junto                                     |
+| Pedido → Produto                                 | Referência (`idProduto`) + nome/peso copiados | O catálogo muda; o pedido antigo não pode mudar                       |
+| Pedido e Entrega                                 | Collections diferentes                        | Pedido é comercial; entrega é a operação (perguntas 1 a 7)            |
+| Entrega → Motorista, Veículo, Transportadora, CD | Referência (`id...`)                          | Cadastros reutilizados (perguntas 3 e 6)                              |
+| Entrega → Rota                                   | Incorporado                                   | Rota daquela entrega (pergunta 4)                                     |
+| Entrega → último rastreio                        | Incorporado (`rastreioAtual`)                 | Pergunta 1 em uma leitura                                             |
+| Histórico de rastreio                            | Collection `rastreamentos`                    | Muitos pontos GPS; não cabe tudo na entrega                           |
+| Ocorrência                                       | Collection `ocorrencias`                      | Contar problemas por CD e por horário                                 |
+| Endereço, Volume, Pagamento                      | Sem collection                                | Só existem dentro de outros documentos                                |
+
+### Collections previstas (próxima atividade, sem criar scripts agora)
+
+`clientes`, `produtos`, `pedidos`, `entregas`, `motoristas`, `veiculos`, `transportadoras`, `centrosDistribuicao`, `rastreamentos`, `ocorrencias`.
+
+## Justificativa
+
+A modelagem segue **como a aplicação usa os dados**, não um modelo relacional.
+
+- **Entrega** junta o que a operação pergunta o tempo todo: situação, atraso, destino, tempos e último GPS.
+- **Pedido** junta o lado comercial: cliente, volumes e pagamento.
+- **Rastreamento** separado porque o GPS gera muitos pontos; o último ponto fica na entrega.
+- **Ocorrência** separada para listar problemas por centro de distribuição e por horário.
+- **Motorista, veículo, transportadora, CD, produto e cliente** em collections próprias porque vários pedidos/entregas usam o mesmo cadastro.
+
