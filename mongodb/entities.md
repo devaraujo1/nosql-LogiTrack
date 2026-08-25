@@ -52,3 +52,146 @@ A aplicação precisa responder:
 Volume, Pagamento e Endereço **existem no domínio**, mas ficam **dentro** de outros documentos (não têm collection própria).
 
 ---
+
+## 2. Atributos
+
+Todos os endereços usam os **mesmos campos**. Os IDs seguem o padrão `id` + nome da entidade (`idCliente`, `idPedido`, …).
+
+Endereço padrão (repetido onde aparecer `endereco`, `origem` ou `destino`):
+
+```
+endereco
+├── rua
+├── numero
+├── complemento
+├── bairro
+├── cidade
+├── estado
+├── cep
+└── pais
+```
+
+### Cliente
+
+Pessoa física ou jurídica que solicita o envio.
+
+**Responsabilidade:** guardar contato e identificar quem fez o pedido.
+
+```
+Cliente
+├── _id
+├── nome
+├── tipo                      # PF | PJ
+├── documento                 # CPF ou CNPJ
+├── email
+├── telefone
+├── endereco
+├── criadoEm
+└── atualizadoEm
+```
+
+Exemplo de documento incorporado (como na aula):
+
+```json
+{
+  "nome": "Maria Silva",
+  "email": "maria@email.com",
+  "telefone": "75999990000",
+  "endereco": {
+    "rua": "Rua A",
+    "numero": "100",
+    "complemento": "",
+    "bairro": "Centro",
+    "cidade": "Feira de Santana",
+    "estado": "BA",
+    "cep": "44000-000",
+    "pais": "Brasil"
+  }
+}
+```
+
+### Pedido
+
+Solicitação de envio.
+
+**Responsabilidade:** registrar a carga, de onde sai, para onde vai e o pagamento.
+
+```
+Pedido
+├── _id
+├── idCliente
+├── situacao                  # criado | pago | em_transito | entregue | cancelado
+├── origem                    # endereço
+├── destino                   # endereço
+├── volumes[]                 # Volume incorporado
+│     ├── codigo
+│     ├── idProduto
+│     ├── nomeProduto
+│     ├── pesoKg
+│     ├── dimensoes
+│     │     ├── comprimentoCm
+│     │     ├── larguraCm
+│     │     └── alturaCm
+│     └── quantidade
+├── pagamento                 # Pagamento incorporado
+│     ├── forma
+│     ├── valor
+│     ├── situacao            # pendente | pago
+│     └── pagoEm
+├── criadoEm
+└── atualizadoEm
+```
+
+### Produto
+
+Item do catálogo.
+
+**Responsabilidade:** dados da mercadoria. No pedido copiamos `nomeProduto` e `pesoKg`, para o histórico não mudar se o catálogo mudar.
+
+```
+Produto
+├── _id
+├── nome
+├── codigo
+├── categoria
+├── pesoKg
+├── dimensoes
+│     ├── comprimentoCm
+│     ├── larguraCm
+│     └── alturaCm
+├── fragil
+└── ativo
+```
+
+### Volume
+
+Unidade física da carga.
+
+**Responsabilidade:** detalhar cada pacote. **Não** tem collection: fica em `Pedido.volumes`.
+
+```
+Volume
+├── codigo
+├── idProduto
+├── nomeProduto
+├── pesoKg
+├── dimensoes
+│     ├── comprimentoCm
+│     ├── larguraCm
+│     └── alturaCm
+└── quantidade
+```
+
+### Pagamento
+
+Cobrança do frete.
+
+**Responsabilidade:** dizer se o pedido foi pago. **Não** tem collection: fica em `Pedido.pagamento`.
+
+```
+Pagamento
+├── forma
+├── valor
+├── situacao                  # pendente | pago
+└── pagoEm
+```
