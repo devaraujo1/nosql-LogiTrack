@@ -195,3 +195,103 @@ Pagamento
 ├── situacao                  # pendente | pago
 └── pagoEm
 ```
+
+---
+
+### Entrega
+
+Operação de transporte. Documento que a operação consulta o tempo todo.
+
+**Responsabilidade:** responder onde está, se atrasou, quem leva e quanto cada etapa demorou.
+
+```
+Entrega
+├── _id
+├── idPedido
+├── idTransportadora
+├── idMotorista
+├── idVeiculo
+├── idCentroDistribuicao
+├── situacao                  # no_cd | em_transito | entregue | falhou
+├── atrasado                  # true | false
+├── prometidoPara
+├── destino                   # mesmo endereço do pedido (cópia)
+├── rota                      # Rota incorporada
+│     ├── distanciaKm
+│     ├── duracaoPrevistaMin
+│     └── duracaoRealMin
+├── horariosEtapas
+│     ├── recebidoNoCdEm
+│     ├── saiuEm
+│     ├── chegouEm
+│     └── entregueEm
+├── rastreioAtual             # último ponto (pergunta 1)
+│     ├── latitude
+│     ├── longitude
+│     ├── cidade
+│     ├── estado
+│     └── registradoEm
+├── criadoEm
+└── atualizadoEm
+```
+
+### Rota
+
+Percurso daquela entrega.
+
+**Responsabilidade:** comparar tempo previsto e real (pergunta 4). Fica **dentro da Entrega** (`rota`).
+
+```
+Rota
+├── distanciaKm
+├── duracaoPrevistaMin
+└── duracaoRealMin
+```
+
+### Centro de Distribuição
+
+Local de armazenagem e despacho.
+
+**Responsabilidade:** ser o hub da carga e aparecer na pergunta 6.
+
+```
+CentroDistribuicao
+├── _id
+├── nome
+├── codigo
+├── endereco
+└── ativo
+```
+
+### Motorista
+
+Quem executa a entrega.
+
+**Responsabilidade:** ser ligado à entrega e à pergunta 3.
+
+```
+Motorista
+├── _id
+├── idTransportadora
+├── nome
+├── documento
+├── numeroCnh
+├── telefone
+└── situacao                  # disponivel | em_rota | inativo
+```
+
+### Veículo
+
+Meio de transporte.
+
+**Responsabilidade:** placa, tipo e capacidade para a entrega.
+
+```
+Veiculo
+├── _id
+├── idTransportadora
+├── placa
+├── tipo                      # van | caminhao | motocicleta
+├── capacidadeKg
+└── situacao                  # disponivel | em_uso | manutencao
+```
