@@ -50,5 +50,6 @@ Usamos o `ObjectId` padrão do MongoDB para os identificadores das collections. 
 ## 7. Schema Flexível (Ocorrências)
 Em Ocorrências, o tipo "atraso" tem a propriedade `minutosAtraso`, enquanto "avaria" tem a propriedade `gravidade`. Essa diferença é necessária e ajuda a operação, pois evita preencher campos que não fazem sentido (uma avaria não tem minutos de atraso). O restante do documento continua igual, mantendo a consistência nas buscas.
 
+
 ## 8. Conclusão da Modelagem
 A **entrega** junta e embute tudo o que a operação lê o tempo todo (rota, destino), otimizando o trabalho logístico em tempo real. O **pedido** junta a parte puramente comercial. Entidades como **motorista, veículo, cliente e produto** ficam separadas porque são cadastros reutilizados o tempo todo por várias operações. Por fim, **rastreamento (GPS) e ocorrência** ficam fora da entrega porque crescem descontroladamente e são consultados por outros eixos (por horário ou por centro logístico).
