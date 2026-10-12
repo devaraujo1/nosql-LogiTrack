@@ -40,3 +40,20 @@ Desenvolver uma solução que aplique conceitos de desenvolvimento de software, 
 └── README.md
 ```
 
+- `modeling/entities.md` — entidades levantadas na atividade anterior.
+- `modeling/relationships.md` — cardinalidade, embed, referência e justificativa da modelagem.
+- `mongodb/` — scripts para criar o banco, inserir os documentos de exemplo e consultar.
+
+## Como executar
+
+É preciso ter o MongoDB em execução na máquina e o `mongosh` instalado. Na raiz do repositório:
+
+```text
+mongosh mongodb/01_database.js
+mongosh mongodb/02_collections.js
+mongosh mongodb/03_insert_data.js
+mongosh mongodb/04_queries.js
+mongosh mongodb/05_relationships.js
+```
+
+O primeiro script recria o banco `logitrack`. A ordem importa: as collections nascem no segundo, os documentos no terceiro, e as consultas usam esses dados.
