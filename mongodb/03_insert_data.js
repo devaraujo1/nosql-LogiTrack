@@ -1,401 +1,621 @@
-// =====================================================================
-// 03_insert_data.js — LogiTrack: inserção dos documentos de exemplo
-// Rodar depois de 01_database.js e 02_collections.js:
-//   mongosh --file mongodb/03_insert_data.js
-// =====================================================================
+// LogiTrack — Atividade 3
+// Responsável: João Paulo de Oliveira Carneiro
+//
+// Documentos de exemplo da operação na Bahia.
+// ObjectId fixo para os outros scripts apontarem para o mesmo documento.
+// insertOne e insertMany aparecem de propósito.
+// Ocorrência de atraso leva minutosAtraso; ocorrência de avaria leva gravidade.
 
-db = db.getSiblingDB("logitrack");
+const banco = db.getSiblingDB("logitrack");
 
-// Limpa as collections para o script poder rodar de novo
-[
-  "clientes", "produtos", "pedidos", "entregas", "transportadoras",
-  "motoristas", "veiculos", "centrosDistribuicao", "ocorrencias", "rastreamentos",
-].forEach((c) => db.getCollection(c).deleteMany({}));
+const idTransportadoraNorte = ObjectId("64f100000000000000000001");
+const idTransportadoraBahia = ObjectId("64f100000000000000000002");
 
-// ---------- Auxiliares ----------
-const oid = (n) => ObjectId("65" + "0".repeat(20) + n);
+const idCdFeira = ObjectId("64f200000000000000000001");
+const idCdSalvador = ObjectId("64f200000000000000000002");
 
-// Endereço padrão (mesmos campos em todo o projeto)
-const endereco = (rua, numero, complemento, bairro, cidade, estado, cep) => ({
-  rua, numero, complemento, bairro, cidade, estado, cep, pais: "Brasil",
-});
+const idMotoristaCarlos = ObjectId("64f300000000000000000001");
+const idMotoristaAna = ObjectId("64f300000000000000000002");
+const idMotoristaPedro = ObjectId("64f300000000000000000003");
 
-// ---------- IDs ----------
-const idTransp1 = oid("01"), idTransp2 = oid("02");
-const idCd1 = oid("11"), idCd2 = oid("12");
-const idCliente1 = oid("21"), idCliente2 = oid("22"), idCliente3 = oid("23");
-const idProd1 = oid("31"), idProd2 = oid("32"), idProd3 = oid("33"), idProd4 = oid("34");
-const idMot1 = oid("41"), idMot2 = oid("42"), idMot3 = oid("43");
-const idVei1 = oid("51"), idVei2 = oid("52"), idVei3 = oid("53");
-const idPed1 = oid("61"), idPed2 = oid("62"), idPed3 = oid("63"), idPed4 = oid("64");
-const idEnt1 = oid("71"), idEnt2 = oid("72"), idEnt3 = oid("73"), idEnt4 = oid("74");
+const idVeiculoVan = ObjectId("64f400000000000000000001");
+const idVeiculoCaminhao = ObjectId("64f400000000000000000002");
+const idVeiculoMoto = ObjectId("64f400000000000000000003");
 
-// ---------- Endereços reutilizados ----------
-const endFeira = endereco("Av. Getúlio Vargas", "250", "", "Centro", "Feira de Santana", "BA", "44001-000");
-const endSalvador = endereco("Av. Tancredo Neves", "1000", "Sala 10", "Caminho das Árvores", "Salvador", "BA", "41820-021");
-const endConquista = endereco("Av. Brumado", "300", "", "Candeias", "Vitória da Conquista", "BA", "45055-000");
-const endJequie = endereco("Rua Rui Barbosa", "45", "", "Centro", "Jequié", "BA", "45200-000");
+const idClienteMaria = ObjectId("64f500000000000000000001");
+const idClienteOliveira = ObjectId("64f500000000000000000002");
+const idClienteJoao = ObjectId("64f500000000000000000003");
 
-// =====================================================================
-// 1) TRANSPORTADORAS — endereço incorporado (só existe dentro dela)
-// =====================================================================
-db.transportadoras.insertOne({
-  _id: idTransp1,
-  nome: "RápidoBahia Transportes",
+const idProdutoNotebook = ObjectId("64f600000000000000000001");
+const idProdutoMouse = ObjectId("64f600000000000000000002");
+const idProdutoCadeira = ObjectId("64f600000000000000000003");
+const idProdutoPerfume = ObjectId("64f600000000000000000004");
+
+const idPedidoMariaSalvador = ObjectId("64f700000000000000000001");
+const idPedidoOliveiraFeira = ObjectId("64f700000000000000000002");
+const idPedidoJoaoSerrinha = ObjectId("64f700000000000000000003");
+const idPedidoMariaIlheus = ObjectId("64f700000000000000000004");
+
+const idEntregaSalvador = ObjectId("64f800000000000000000001");
+const idEntregaFeira = ObjectId("64f800000000000000000002");
+const idEntregaSerrinha = ObjectId("64f800000000000000000003");
+const idEntregaIlheus = ObjectId("64f800000000000000000004");
+
+function endereco(rua, numero, complemento, bairro, cidade, estado, cep) {
+  return {
+    rua: rua,
+    numero: numero,
+    complemento: complemento,
+    bairro: bairro,
+    cidade: cidade,
+    estado: estado,
+    cep: cep,
+    pais: "Brasil"
+  };
+}
+
+function dimensoes(comprimentoCm, larguraCm, alturaCm) {
+  return {
+    comprimentoCm: Double(comprimentoCm),
+    larguraCm: Double(larguraCm),
+    alturaCm: Double(alturaCm)
+  };
+}
+
+function ponto(latitude, longitude, cidade, estado, registradoEm) {
+  return {
+    latitude: Double(latitude),
+    longitude: Double(longitude),
+    cidade: cidade,
+    estado: estado,
+    registradoEm: registradoEm
+  };
+}
+
+banco.transportadoras.deleteMany({});
+banco.centrosDistribuicao.deleteMany({});
+banco.motoristas.deleteMany({});
+banco.veiculos.deleteMany({});
+banco.clientes.deleteMany({});
+banco.produtos.deleteMany({});
+banco.pedidos.deleteMany({});
+banco.entregas.deleteMany({});
+banco.ocorrencias.deleteMany({});
+banco.rastreamentos.deleteMany({});
+
+banco.transportadoras.insertOne({
+  _id: idTransportadoraNorte,
+  nome: "Rota Norte Logística",
   documento: "12.345.678/0001-90",
-  email: "contato@rapidobahia.com.br",
-  telefone: "75988880001",
-  endereco: endereco("Rua Conselheiro Franco", "80", "", "Centro", "Feira de Santana", "BA", "44001-100"),
-  ativo: true,
-});
-db.transportadoras.insertOne({
-  _id: idTransp2,
-  nome: "NordesteLog",
-  documento: "98.765.432/0001-10",
-  email: "contato@nordestelog.com.br",
-  telefone: "71988880002",
-  endereco: endereco("Av. Paralela", "2000", "Bloco B", "Pituaçu", "Salvador", "BA", "41740-090"),
-  ativo: true,
+  email: "contato@rotanorte.example",
+  telefone: "7532101000",
+  endereco: endereco("Avenida Getúlio Vargas", "1500", "Galpão 2", "Centro", "Feira de Santana", "BA", "44001-000"),
+  ativo: true
 });
 
-// =====================================================================
-// 2) CENTROS DE DISTRIBUIÇÃO — endereço incorporado
-// =====================================================================
-db.centrosDistribuicao.insertMany([
+banco.transportadoras.insertMany([
   {
-    _id: idCd1,
+    _id: idTransportadoraBahia,
+    nome: "Bahia Express",
+    documento: "98.765.432/0001-10",
+    email: "operacao@bahiaexpress.example",
+    telefone: "7133332000",
+    endereco: endereco("Rua Chile", "40", "", "Comércio", "Salvador", "BA", "40020-000"),
+    ativo: true
+  }
+]);
+
+banco.centrosDistribuicao.insertMany([
+  {
+    _id: idCdFeira,
     nome: "CD Feira de Santana",
     codigo: "CD-FSA",
-    endereco: endereco("Rod. BR-324", "km 3", "Galpão 2", "Tomba", "Feira de Santana", "BA", "44090-000"),
-    ativo: true,
+    endereco: endereco("Rodovia BR-116", "Km 8", "Bloco A", "Tomba", "Feira de Santana", "BA", "44090-000"),
+    ativo: true
   },
   {
-    _id: idCd2,
+    _id: idCdSalvador,
     nome: "CD Salvador",
     codigo: "CD-SSA",
-    endereco: endereco("Av. Afrânio Peixoto", "500", "Galpão 1", "Periperi", "Salvador", "BA", "40720-000"),
-    ativo: true,
-  },
+    endereco: endereco("Avenida Luís Viana", "3200", "", "Paralela", "Salvador", "BA", "41730-101"),
+    ativo: true
+  }
 ]);
 
-// =====================================================================
-// 3) CLIENTES — endereço incorporado (lido junto com o cadastro)
-// =====================================================================
-db.clientes.insertMany([
+banco.motoristas.insertMany([
   {
-    _id: idCliente1,
-    nome: "Maria Silva",
-    tipo: "PF",
-    documento: "123.456.789-00",
-    email: "maria@email.com",
-    telefone: "75999990000",
-    endereco: endFeira,
-    criadoEm: ISODate("2026-09-01T10:00:00Z"),
-    atualizadoEm: ISODate("2026-09-01T10:00:00Z"),
+    _id: idMotoristaCarlos,
+    idTransportadora: idTransportadoraNorte,
+    nome: "Carlos Lima",
+    documento: "111.222.333-44",
+    numeroCnh: "BA100200300",
+    telefone: "75988881001",
+    situacao: "em_rota"
   },
   {
-    _id: idCliente2,
-    nome: "Comercial Alfa Ltda",
+    _id: idMotoristaAna,
+    idTransportadora: idTransportadoraNorte,
+    nome: "Ana Souza",
+    documento: "222.333.444-55",
+    numeroCnh: "BA100200301",
+    telefone: "75988881002",
+    situacao: "disponivel"
+  },
+  {
+    _id: idMotoristaPedro,
+    idTransportadora: idTransportadoraBahia,
+    nome: "Pedro Almeida",
+    documento: "333.444.555-66",
+    numeroCnh: "BA100200302",
+    telefone: "71988881003",
+    situacao: "em_rota"
+  }
+]);
+
+banco.veiculos.insertMany([
+  {
+    _id: idVeiculoVan,
+    idTransportadora: idTransportadoraNorte,
+    placa: "ABC1D23",
+    tipo: "van",
+    capacidadeKg: NumberInt(800),
+    situacao: "em_uso"
+  },
+  {
+    _id: idVeiculoCaminhao,
+    idTransportadora: idTransportadoraNorte,
+    placa: "DEF2E34",
+    tipo: "caminhao",
+    capacidadeKg: NumberInt(3000),
+    situacao: "disponivel"
+  },
+  {
+    _id: idVeiculoMoto,
+    idTransportadora: idTransportadoraBahia,
+    placa: "GHI3F45",
+    tipo: "motocicleta",
+    capacidadeKg: NumberInt(30),
+    situacao: "em_uso"
+  }
+]);
+
+banco.clientes.insertOne({
+  _id: idClienteMaria,
+  nome: "Maria Silva",
+  tipo: "PF",
+  documento: "123.456.789-00",
+  email: "maria@email.com",
+  telefone: "75999990000",
+  endereco: endereco("Rua A", "100", "", "Centro", "Feira de Santana", "BA", "44000-000"),
+  criadoEm: ISODate("2026-09-01T11:00:00Z"),
+  atualizadoEm: ISODate("2026-09-10T11:00:00Z")
+});
+
+banco.clientes.insertMany([
+  {
+    _id: idClienteOliveira,
+    nome: "Comercial Oliveira LTDA",
     tipo: "PJ",
-    documento: "11.222.333/0001-44",
-    email: "compras@alfa.com.br",
-    telefone: "71999990001",
-    endereco: endSalvador,
-    criadoEm: ISODate("2026-09-02T11:00:00Z"),
-    atualizadoEm: ISODate("2026-09-02T11:00:00Z"),
+    documento: "45.678.901/0001-22",
+    email: "compras@oliveira.example",
+    telefone: "7130304040",
+    endereco: endereco("Rua Chile", "80", "Sala 3", "Comércio", "Salvador", "BA", "40020-010"),
+    criadoEm: ISODate("2026-08-15T14:00:00Z"),
+    atualizadoEm: ISODate("2026-09-12T14:00:00Z")
   },
   {
-    _id: idCliente3,
-    nome: "Carlos Souza",
+    _id: idClienteJoao,
+    nome: "João Santos",
     tipo: "PF",
     documento: "987.654.321-00",
-    email: "carlos@email.com",
-    telefone: "77999990002",
-    endereco: endConquista,
-    criadoEm: ISODate("2026-09-03T09:30:00Z"),
-    atualizadoEm: ISODate("2026-09-03T09:30:00Z"),
-  },
+    email: "joao.santos@email.com",
+    telefone: "75988887777",
+    endereco: endereco("Rua B", "45", "Apto 2", "Kalilândia", "Feira de Santana", "BA", "44050-000"),
+    criadoEm: ISODate("2026-09-05T09:30:00Z"),
+    atualizadoEm: ISODate("2026-09-05T09:30:00Z")
+  }
 ]);
 
-// =====================================================================
-// 4) PRODUTOS — catálogo (referenciado pelos volumes dos pedidos)
-// =====================================================================
-db.produtos.insertMany([
+banco.produtos.insertMany([
   {
-    _id: idProd1, nome: "Notebook", codigo: "NB-001", categoria: "Eletrônicos",
-    pesoKg: Double(2.5), dimensoes: { comprimentoCm: 40, larguraCm: 30, alturaCm: 5 },
-    fragil: true, ativo: true,
+    _id: idProdutoNotebook,
+    nome: "Notebook",
+    codigo: "PROD-001",
+    categoria: "Eletrônicos",
+    pesoKg: Double(2.1),
+    dimensoes: dimensoes(36, 25, 3),
+    fragil: true,
+    ativo: true
   },
   {
-    _id: idProd2, nome: "Mouse sem fio", codigo: "MS-002", categoria: "Periféricos",
-    pesoKg: Double(0.2), dimensoes: { comprimentoCm: 15, larguraCm: 10, alturaCm: 8 },
-    fragil: false, ativo: true,
+    _id: idProdutoMouse,
+    nome: "Mouse",
+    codigo: "PROD-002",
+    categoria: "Eletrônicos",
+    pesoKg: Double(0.12),
+    dimensoes: dimensoes(12, 7, 4),
+    fragil: false,
+    ativo: true
   },
   {
-    _id: idProd3, nome: "Monitor 24 polegadas", codigo: "MN-003", categoria: "Eletrônicos",
-    pesoKg: Double(4.8), dimensoes: { comprimentoCm: 60, larguraCm: 40, alturaCm: 15 },
-    fragil: true, ativo: true,
+    _id: idProdutoCadeira,
+    nome: "Cadeira de escritório",
+    codigo: "PROD-003",
+    categoria: "Móveis",
+    pesoKg: Double(12.5),
+    dimensoes: dimensoes(60, 60, 110),
+    fragil: false,
+    ativo: true
   },
   {
-    _id: idProd4, nome: "Cadeira de escritório", codigo: "CD-004", categoria: "Móveis",
-    pesoKg: Double(12), dimensoes: { comprimentoCm: 70, larguraCm: 60, alturaCm: 50 },
-    fragil: false, ativo: true,
-  },
+    _id: idProdutoPerfume,
+    nome: "Perfume",
+    codigo: "PROD-004",
+    categoria: "Cosméticos",
+    pesoKg: Double(0.4),
+    dimensoes: dimensoes(8, 8, 15),
+    fragil: true,
+    ativo: true
+  }
 ]);
 
-// =====================================================================
-// 5) MOTORISTAS e VEÍCULOS — referenciam a transportadora
-// =====================================================================
-db.motoristas.insertMany([
+banco.pedidos.insertMany([
   {
-    _id: idMot1, idTransportadora: idTransp1, nome: "Carlos Eduardo",
-    documento: "111.222.333-44", numeroCnh: "01234567890", telefone: "75988881111",
-    situacao: "disponivel",
-  },
-  {
-    _id: idMot2, idTransportadora: idTransp1, nome: "Ana Paula",
-    documento: "222.333.444-55", numeroCnh: "09876543210", telefone: "75988882222",
-    situacao: "em_rota",
-  },
-  {
-    _id: idMot3, idTransportadora: idTransp2, nome: "Roberto Lima",
-    documento: "333.444.555-66", numeroCnh: "01357913579", telefone: "71988883333",
-    situacao: "em_rota",
-  },
-]);
-
-// A placa fica como texto (não é _id): se mudar, nenhuma referência quebra
-db.veiculos.insertMany([
-  { _id: idVei1, idTransportadora: idTransp1, placa: "ABC1D23", tipo: "van", capacidadeKg: Double(1200), situacao: "disponivel" },
-  { _id: idVei2, idTransportadora: idTransp1, placa: "DEF4G56", tipo: "caminhao", capacidadeKg: Double(8000), situacao: "em_uso" },
-  { _id: idVei3, idTransportadora: idTransp2, placa: "HIJ7K89", tipo: "van", capacidadeKg: Double(1500), situacao: "em_uso" },
-]);
-
-// =====================================================================
-// 6) PEDIDOS
-// Incorporados: origem, destino, volumes[] e pagamento.
-// Referências: idCliente e volumes[].idProduto
-// (nomeProduto e pesoKg são copiados para o histórico não mudar).
-// =====================================================================
-db.pedidos.insertMany([
-  {
-    // Pedido com 2 volumes
-    _id: idPed1,
-    idCliente: idCliente1,
-    situacao: "entregue",
-    origem: endFeira,
-    destino: endSalvador,
-    volumes: [
-      {
-        codigo: "VOL-001", idProduto: idProd1, nomeProduto: "Notebook", pesoKg: Double(2.5),
-        dimensoes: { comprimentoCm: 40, larguraCm: 30, alturaCm: 5 }, quantidade: NumberInt(1),
-      },
-      {
-        codigo: "VOL-002", idProduto: idProd2, nomeProduto: "Mouse sem fio", pesoKg: Double(0.2),
-        dimensoes: { comprimentoCm: 15, larguraCm: 10, alturaCm: 8 }, quantidade: NumberInt(2),
-      },
-    ],
-    pagamento: { forma: "pix", valor: NumberDecimal("45.90"), situacao: "pago", pagoEm: ISODate("2026-10-01T09:00:00Z") },
-    criadoEm: ISODate("2026-10-01T08:30:00Z"),
-    atualizadoEm: ISODate("2026-10-02T12:10:00Z"),
-  },
-  {
-    _id: idPed2,
-    idCliente: idCliente2,
+    _id: idPedidoMariaSalvador,
+    idCliente: idClienteMaria,
     situacao: "em_transito",
-    origem: endSalvador,
-    destino: endFeira,
+    origem: endereco("Rua A", "100", "", "Centro", "Feira de Santana", "BA", "44000-000"),
+    destino: endereco("Rua da Graça", "200", "Apto 11", "Graça", "Salvador", "BA", "40150-000"),
     volumes: [
       {
-        codigo: "VOL-003", idProduto: idProd3, nomeProduto: "Monitor 24 polegadas", pesoKg: Double(4.8),
-        dimensoes: { comprimentoCm: 60, larguraCm: 40, alturaCm: 15 }, quantidade: NumberInt(1),
+        codigo: "VOL-1001",
+        idProduto: idProdutoNotebook,
+        nomeProduto: "Notebook",
+        pesoKg: Double(2.1),
+        dimensoes: dimensoes(36, 25, 3),
+        quantidade: NumberInt(1)
       },
-    ],
-    pagamento: { forma: "cartao", valor: NumberDecimal("89.50"), situacao: "pago", pagoEm: ISODate("2026-10-07T14:10:00Z") },
-    criadoEm: ISODate("2026-10-07T14:00:00Z"),
-    atualizadoEm: ISODate("2026-10-09T07:00:00Z"),
-  },
-  {
-    _id: idPed3,
-    idCliente: idCliente3,
-    situacao: "em_transito",
-    origem: endFeira,
-    destino: endConquista,
-    volumes: [
       {
-        codigo: "VOL-004", idProduto: idProd4, nomeProduto: "Cadeira de escritório", pesoKg: Double(12),
-        dimensoes: { comprimentoCm: 70, larguraCm: 60, alturaCm: 50 }, quantidade: NumberInt(2),
-      },
+        codigo: "VOL-1002",
+        idProduto: idProdutoMouse,
+        nomeProduto: "Mouse",
+        pesoKg: Double(0.12),
+        dimensoes: dimensoes(12, 7, 4),
+        quantidade: NumberInt(2)
+      }
     ],
-    pagamento: { forma: "boleto", valor: NumberDecimal("150.00"), situacao: "pago", pagoEm: ISODate("2026-10-06T15:00:00Z") },
-    criadoEm: ISODate("2026-10-06T10:00:00Z"),
-    atualizadoEm: ISODate("2026-10-08T09:00:00Z"),
-  },
-  {
-    _id: idPed4,
-    idCliente: idCliente1,
-    situacao: "entregue",
-    origem: endFeira,
-    destino: endJequie,
-    volumes: [
-      {
-        codigo: "VOL-005", idProduto: idProd2, nomeProduto: "Mouse sem fio", pesoKg: Double(0.2),
-        dimensoes: { comprimentoCm: 15, larguraCm: 10, alturaCm: 8 }, quantidade: NumberInt(3),
-      },
-    ],
-    pagamento: { forma: "pix", valor: NumberDecimal("32.75"), situacao: "pago", pagoEm: ISODate("2026-10-04T12:00:00Z") },
-    criadoEm: ISODate("2026-10-04T09:00:00Z"),
-    atualizadoEm: ISODate("2026-10-05T19:45:00Z"),
-  },
-]);
-
-// =====================================================================
-// 7) ENTREGAS
-// Incorporados: destino (cópia do pedido), rota, horariosEtapas, rastreioAtual.
-// Referências: pedido, transportadora, motorista, veículo e centro.
-// Entregas em andamento não têm chegouEm/entregueEm nem duracaoRealMin ainda.
-// =====================================================================
-db.entregas.insertMany([
-  {
-    // No prazo, entregue (Salvador)
-    _id: idEnt1,
-    idPedido: idPed1, idTransportadora: idTransp1, idMotorista: idMot1,
-    idVeiculo: idVei1, idCentroDistribuicao: idCd1,
-    situacao: "entregue",
-    atrasado: false,
-    prometidoPara: ISODate("2026-10-03T18:00:00Z"),
-    destino: endSalvador,
-    rota: { distanciaKm: Double(110), duracaoPrevistaMin: NumberInt(120), duracaoRealMin: NumberInt(115) },
-    horariosEtapas: {
-      recebidoNoCdEm: ISODate("2026-10-02T08:00:00Z"),
-      saiuEm: ISODate("2026-10-02T10:00:00Z"),
-      chegouEm: ISODate("2026-10-02T11:55:00Z"),
-      entregueEm: ISODate("2026-10-02T12:10:00Z"),
+    pagamento: {
+      forma: "pix",
+      valor: NumberDecimal("189.90"),
+      situacao: "pago",
+      pagoEm: ISODate("2026-09-16T11:20:00Z")
     },
-    rastreioAtual: { latitude: Double(-12.9777), longitude: Double(-38.5016), cidade: "Salvador", estado: "BA", registradoEm: ISODate("2026-10-02T12:10:00Z") },
-    criadoEm: ISODate("2026-10-02T08:00:00Z"),
-    atualizadoEm: ISODate("2026-10-02T12:10:00Z"),
+    criadoEm: ISODate("2026-09-16T11:00:00Z"),
+    atualizadoEm: ISODate("2026-09-16T15:00:00Z")
   },
   {
-    // No prazo, em trânsito (Feira de Santana)
-    _id: idEnt2,
-    idPedido: idPed2, idTransportadora: idTransp2, idMotorista: idMot3,
-    idVeiculo: idVei3, idCentroDistribuicao: idCd2,
+    _id: idPedidoOliveiraFeira,
+    idCliente: idClienteOliveira,
     situacao: "em_transito",
-    atrasado: false,
-    prometidoPara: ISODate("2026-10-10T18:00:00Z"),
-    destino: endFeira,
-    rota: { distanciaKm: Double(110), duracaoPrevistaMin: NumberInt(120) },
-    horariosEtapas: {
-      recebidoNoCdEm: ISODate("2026-10-08T16:00:00Z"),
-      saiuEm: ISODate("2026-10-09T07:00:00Z"),
+    origem: endereco("Rua Chile", "80", "Sala 3", "Comércio", "Salvador", "BA", "40020-010"),
+    destino: endereco("Avenida Senhor dos Passos", "900", "", "Centro", "Feira de Santana", "BA", "44002-000"),
+    volumes: [
+      {
+        codigo: "VOL-2001",
+        idProduto: idProdutoCadeira,
+        nomeProduto: "Cadeira de escritório",
+        pesoKg: Double(12.5),
+        dimensoes: dimensoes(60, 60, 110),
+        quantidade: NumberInt(1)
+      },
+      {
+        codigo: "VOL-2002",
+        idProduto: idProdutoPerfume,
+        nomeProduto: "Perfume",
+        pesoKg: Double(0.4),
+        dimensoes: dimensoes(8, 8, 15),
+        quantidade: NumberInt(3)
+      }
+    ],
+    pagamento: {
+      forma: "boleto",
+      valor: NumberDecimal("240.00"),
+      situacao: "pago",
+      pagoEm: ISODate("2026-09-17T13:00:00Z")
     },
-    rastreioAtual: { latitude: Double(-12.7867), longitude: Double(-38.4033), cidade: "Simões Filho", estado: "BA", registradoEm: ISODate("2026-10-09T08:30:00Z") },
-    criadoEm: ISODate("2026-10-08T16:00:00Z"),
-    atualizadoEm: ISODate("2026-10-09T08:30:00Z"),
+    criadoEm: ISODate("2026-09-17T12:10:00Z"),
+    atualizadoEm: ISODate("2026-09-17T16:00:00Z")
   },
   {
-    // Atrasada, em trânsito (Vitória da Conquista)
-    _id: idEnt3,
-    idPedido: idPed3, idTransportadora: idTransp1, idMotorista: idMot2,
-    idVeiculo: idVei2, idCentroDistribuicao: idCd1,
+    _id: idPedidoJoaoSerrinha,
+    idCliente: idClienteJoao,
+    situacao: "entregue",
+    origem: endereco("Rua B", "45", "Apto 2", "Kalilândia", "Feira de Santana", "BA", "44050-000"),
+    destino: endereco("Praça da Matriz", "10", "", "Centro", "Serrinha", "BA", "48700-000"),
+    volumes: [
+      {
+        codigo: "VOL-3001",
+        idProduto: idProdutoMouse,
+        nomeProduto: "Mouse",
+        pesoKg: Double(0.12),
+        dimensoes: dimensoes(12, 7, 4),
+        quantidade: NumberInt(1)
+      }
+    ],
+    pagamento: {
+      forma: "pix",
+      valor: NumberDecimal("35.50"),
+      situacao: "pago",
+      pagoEm: ISODate("2026-09-15T10:05:00Z")
+    },
+    criadoEm: ISODate("2026-09-15T10:00:00Z"),
+    atualizadoEm: ISODate("2026-09-15T16:40:00Z")
+  },
+  {
+    _id: idPedidoMariaIlheus,
+    idCliente: idClienteMaria,
+    situacao: "em_transito",
+    origem: endereco("Rua A", "100", "", "Centro", "Feira de Santana", "BA", "44000-000"),
+    destino: endereco("Avenida Soares Lopes", "500", "", "Centro", "Ilhéus", "BA", "45653-000"),
+    volumes: [
+      {
+        codigo: "VOL-4001",
+        idProduto: idProdutoNotebook,
+        nomeProduto: "Notebook",
+        pesoKg: Double(2.1),
+        dimensoes: dimensoes(36, 25, 3),
+        quantidade: NumberInt(1)
+      },
+      {
+        codigo: "VOL-4002",
+        idProduto: idProdutoCadeira,
+        nomeProduto: "Cadeira de escritório",
+        pesoKg: Double(12.5),
+        dimensoes: dimensoes(60, 60, 110),
+        quantidade: NumberInt(1)
+      }
+    ],
+    pagamento: {
+      forma: "cartao",
+      valor: NumberDecimal("310.00"),
+      situacao: "pago",
+      pagoEm: ISODate("2026-09-17T08:15:00Z")
+    },
+    criadoEm: ISODate("2026-09-17T08:00:00Z"),
+    atualizadoEm: ISODate("2026-09-17T11:00:00Z")
+  }
+]);
+
+banco.entregas.insertMany([
+  {
+    _id: idEntregaSalvador,
+    idPedido: idPedidoMariaSalvador,
+    idTransportadora: idTransportadoraNorte,
+    idMotorista: idMotoristaCarlos,
+    idVeiculo: idVeiculoVan,
+    idCentroDistribuicao: idCdFeira,
     situacao: "em_transito",
     atrasado: true,
-    prometidoPara: ISODate("2026-10-08T18:00:00Z"),
-    destino: endConquista,
-    rota: { distanciaKm: Double(380), duracaoPrevistaMin: NumberInt(360) },
-    horariosEtapas: {
-      recebidoNoCdEm: ISODate("2026-10-07T17:00:00Z"),
-      saiuEm: ISODate("2026-10-08T09:00:00Z"),
+    prometidoPara: ISODate("2026-09-16T21:00:00Z"),
+    destino: endereco("Rua da Graça", "200", "Apto 11", "Graça", "Salvador", "BA", "40150-000"),
+    rota: {
+      distanciaKm: Double(108.5),
+      duracaoPrevistaMin: NumberInt(120),
+      duracaoRealMin: NumberInt(240)
     },
-    rastreioAtual: { latitude: Double(-14.528), longitude: Double(-40.3636), cidade: "Poções", estado: "BA", registradoEm: ISODate("2026-10-09T09:30:00Z") },
-    criadoEm: ISODate("2026-10-07T17:00:00Z"),
-    atualizadoEm: ISODate("2026-10-09T09:30:00Z"),
+    horariosEtapas: {
+      recebidoNoCdEm: ISODate("2026-09-16T12:00:00Z"),
+      saiuEm: ISODate("2026-09-16T15:00:00Z")
+    },
+    rastreioAtual: ponto(-12.95, -38.51, "Salvador", "BA", ISODate("2026-09-16T22:30:00Z")),
+    criadoEm: ISODate("2026-09-16T12:00:00Z"),
+    atualizadoEm: ISODate("2026-09-16T22:30:00Z")
   },
   {
-    // Atrasada, entregue (Jequié)
-    _id: idEnt4,
-    idPedido: idPed4, idTransportadora: idTransp1, idMotorista: idMot1,
-    idVeiculo: idVei1, idCentroDistribuicao: idCd1,
+    _id: idEntregaFeira,
+    idPedido: idPedidoOliveiraFeira,
+    idTransportadora: idTransportadoraBahia,
+    idMotorista: idMotoristaPedro,
+    idVeiculo: idVeiculoMoto,
+    idCentroDistribuicao: idCdSalvador,
+    situacao: "em_transito",
+    atrasado: false,
+    prometidoPara: ISODate("2026-09-17T22:00:00Z"),
+    destino: endereco("Avenida Senhor dos Passos", "900", "", "Centro", "Feira de Santana", "BA", "44002-000"),
+    rota: {
+      distanciaKm: Double(112),
+      duracaoPrevistaMin: NumberInt(90),
+      duracaoRealMin: NumberInt(80)
+    },
+    horariosEtapas: {
+      recebidoNoCdEm: ISODate("2026-09-17T15:00:00Z"),
+      saiuEm: ISODate("2026-09-17T16:10:00Z")
+    },
+    rastreioAtual: ponto(-12.4, -38.85, "Conceição do Jacuípe", "BA", ISODate("2026-09-17T17:20:00Z")),
+    criadoEm: ISODate("2026-09-17T15:00:00Z"),
+    atualizadoEm: ISODate("2026-09-17T17:20:00Z")
+  },
+  {
+    _id: idEntregaSerrinha,
+    idPedido: idPedidoJoaoSerrinha,
+    idTransportadora: idTransportadoraNorte,
+    idMotorista: idMotoristaAna,
+    idVeiculo: idVeiculoCaminhao,
+    idCentroDistribuicao: idCdFeira,
     situacao: "entregue",
-    atrasado: true,
-    prometidoPara: ISODate("2026-10-05T18:00:00Z"),
-    destino: endJequie,
-    rota: { distanciaKm: Double(260), duracaoPrevistaMin: NumberInt(240), duracaoRealMin: NumberInt(300) },
-    horariosEtapas: {
-      recebidoNoCdEm: ISODate("2026-10-05T08:00:00Z"),
-      saiuEm: ISODate("2026-10-05T14:30:00Z"),
-      chegouEm: ISODate("2026-10-05T19:30:00Z"),
-      entregueEm: ISODate("2026-10-05T19:45:00Z"),
+    atrasado: false,
+    prometidoPara: ISODate("2026-09-15T18:00:00Z"),
+    destino: endereco("Praça da Matriz", "10", "", "Centro", "Serrinha", "BA", "48700-000"),
+    rota: {
+      distanciaKm: Double(78.2),
+      duracaoPrevistaMin: NumberInt(60),
+      duracaoRealMin: NumberInt(55)
     },
-    rastreioAtual: { latitude: Double(-13.8587), longitude: Double(-40.0837), cidade: "Jequié", estado: "BA", registradoEm: ISODate("2026-10-05T19:45:00Z") },
-    criadoEm: ISODate("2026-10-05T08:00:00Z"),
-    atualizadoEm: ISODate("2026-10-05T19:45:00Z"),
+    horariosEtapas: {
+      recebidoNoCdEm: ISODate("2026-09-15T12:00:00Z"),
+      saiuEm: ISODate("2026-09-15T13:10:00Z"),
+      chegouEm: ISODate("2026-09-15T14:05:00Z"),
+      entregueEm: ISODate("2026-09-15T14:12:00Z")
+    },
+    rastreioAtual: ponto(-11.664, -39.007, "Serrinha", "BA", ISODate("2026-09-15T14:12:00Z")),
+    criadoEm: ISODate("2026-09-15T12:00:00Z"),
+    atualizadoEm: ISODate("2026-09-15T14:12:00Z")
   },
+  {
+    _id: idEntregaIlheus,
+    idPedido: idPedidoMariaIlheus,
+    idTransportadora: idTransportadoraNorte,
+    idMotorista: idMotoristaCarlos,
+    idVeiculo: idVeiculoVan,
+    idCentroDistribuicao: idCdFeira,
+    situacao: "em_transito",
+    atrasado: true,
+    prometidoPara: ISODate("2026-09-17T15:00:00Z"),
+    destino: endereco("Avenida Soares Lopes", "500", "", "Centro", "Ilhéus", "BA", "45653-000"),
+    rota: {
+      distanciaKm: Double(430),
+      duracaoPrevistaMin: NumberInt(300),
+      duracaoRealMin: NumberInt(380)
+    },
+    horariosEtapas: {
+      recebidoNoCdEm: ISODate("2026-09-17T08:40:00Z"),
+      saiuEm: ISODate("2026-09-17T11:05:00Z")
+    },
+    rastreioAtual: ponto(-14.788, -39.278, "Itabuna", "BA", ISODate("2026-09-17T18:30:00Z")),
+    criadoEm: ISODate("2026-09-17T08:40:00Z"),
+    atualizadoEm: ISODate("2026-09-17T18:30:00Z")
+  }
 ]);
 
-// =====================================================================
-// 8) OCORRÊNCIAS — referenciam a entrega (collection própria)
-// Schema flexível: mesmo núcleo, com um campo extra por tipo
-// (atraso -> minutosAtraso; avaria -> gravidade).
-// =====================================================================
-db.ocorrencias.insertMany([
+banco.ocorrencias.insertMany([
   {
-    _id: oid("81"), idEntrega: idEnt4, idCentroDistribuicao: idCd1, idMotorista: idMot1,
-    tipo: "atraso", descricao: "Trânsito intenso e prazo estourado",
-    dataHora: ISODate("2026-10-05T18:05:00Z"), cidade: "Jequié",
-    minutosAtraso: NumberInt(105),
+    _id: ObjectId("64f900000000000000000001"),
+    idEntrega: idEntregaSalvador,
+    idCentroDistribuicao: idCdFeira,
+    idMotorista: idMotoristaCarlos,
+    tipo: "atraso",
+    descricao: "Congestionamento na BR-324 depois do horário prometido.",
+    dataHora: ISODate("2026-09-16T22:10:00Z"),
+    cidade: "Salvador",
+    minutosAtraso: NumberInt(95)
   },
   {
-    _id: oid("82"), idEntrega: idEnt3, idCentroDistribuicao: idCd1, idMotorista: idMot2,
-    tipo: "atraso", descricao: "Prazo estourado após parada para reparo",
-    dataHora: ISODate("2026-10-09T08:00:00Z"), cidade: "Jequié",
-    minutosAtraso: NumberInt(840),
-  },
-  {
-    _id: oid("83"), idEntrega: idEnt3, idCentroDistribuicao: idCd1, idMotorista: idMot2,
-    tipo: "avaria", descricao: "Pneu furado, caminhão parado para reparo",
-    dataHora: ISODate("2026-10-08T14:20:00Z"), cidade: "Jequié",
-    gravidade: "media",
-  },
-  {
-    _id: oid("84"), idEntrega: idEnt4, idCentroDistribuicao: idCd1, idMotorista: idMot1,
-    tipo: "avaria", descricao: "Embalagem amassada no carregamento",
-    dataHora: ISODate("2026-10-05T15:00:00Z"), cidade: "Feira de Santana",
-    gravidade: "baixa",
-  },
-  {
-    // Sem campo extra: o núcleo basta
-    _id: oid("85"), idEntrega: idEnt1, idCentroDistribuicao: idCd1, idMotorista: idMot1,
-    tipo: "ausente", descricao: "Destinatário ausente na primeira tentativa",
-    dataHora: ISODate("2026-10-02T12:00:00Z"), cidade: "Salvador",
-  },
+    _id: ObjectId("64f900000000000000000002"),
+    idEntrega: idEntregaIlheus,
+    idCentroDistribuicao: idCdFeira,
+    idMotorista: idMotoristaCarlos,
+    tipo: "atraso",
+    descricao: "Saída do CD depois da janela da manhã.",
+    dataHora: ISODate("2026-09-17T08:40:00Z"),
+    cidade: "Feira de Santana",
+    minutosAtraso: NumberInt(40)
+  }
 ]);
 
-// =====================================================================
-// 9) RASTREAMENTOS — histórico de GPS (referenciam a entrega).
-// O último ponto de cada entrega é o mesmo de entregas.rastreioAtual.
-// =====================================================================
-db.rastreamentos.insertMany([
-  // Entrega 1 (Feira de Santana -> Salvador)
-  { _id: oid("A1"), idEntrega: idEnt1, latitude: Double(-12.2664), longitude: Double(-38.9663), cidade: "Feira de Santana", estado: "BA", registradoEm: ISODate("2026-10-02T10:00:00Z") },
-  { _id: oid("A2"), idEntrega: idEnt1, latitude: Double(-12.7867), longitude: Double(-38.4033), cidade: "Simões Filho", estado: "BA", registradoEm: ISODate("2026-10-02T11:00:00Z") },
-  { _id: oid("A3"), idEntrega: idEnt1, latitude: Double(-12.9777), longitude: Double(-38.5016), cidade: "Salvador", estado: "BA", registradoEm: ISODate("2026-10-02T12:10:00Z") },
-  // Entrega 2 (Salvador -> Feira de Santana)
-  { _id: oid("A4"), idEntrega: idEnt2, latitude: Double(-12.9777), longitude: Double(-38.5016), cidade: "Salvador", estado: "BA", registradoEm: ISODate("2026-10-09T07:00:00Z") },
-  { _id: oid("A5"), idEntrega: idEnt2, latitude: Double(-12.7867), longitude: Double(-38.4033), cidade: "Simões Filho", estado: "BA", registradoEm: ISODate("2026-10-09T08:30:00Z") },
-  // Entrega 3 (Feira de Santana -> Vitória da Conquista)
-  { _id: oid("A6"), idEntrega: idEnt3, latitude: Double(-12.2664), longitude: Double(-38.9663), cidade: "Feira de Santana", estado: "BA", registradoEm: ISODate("2026-10-08T09:00:00Z") },
-  { _id: oid("A7"), idEntrega: idEnt3, latitude: Double(-13.8587), longitude: Double(-40.0837), cidade: "Jequié", estado: "BA", registradoEm: ISODate("2026-10-08T14:00:00Z") },
-  { _id: oid("A8"), idEntrega: idEnt3, latitude: Double(-14.528), longitude: Double(-40.3636), cidade: "Poções", estado: "BA", registradoEm: ISODate("2026-10-09T09:30:00Z") },
-  // Entrega 4 (Feira de Santana -> Jequié)
-  { _id: oid("A9"), idEntrega: idEnt4, latitude: Double(-12.2664), longitude: Double(-38.9663), cidade: "Feira de Santana", estado: "BA", registradoEm: ISODate("2026-10-05T14:30:00Z") },
-  { _id: oid("AA"), idEntrega: idEnt4, latitude: Double(-12.4297), longitude: Double(-39.2478), cidade: "Santo Estêvão", estado: "BA", registradoEm: ISODate("2026-10-05T16:30:00Z") },
-  { _id: oid("AB"), idEntrega: idEnt4, latitude: Double(-13.8587), longitude: Double(-40.0837), cidade: "Jequié", estado: "BA", registradoEm: ISODate("2026-10-05T19:45:00Z") },
+banco.ocorrencias.insertOne({
+  _id: ObjectId("64f900000000000000000003"),
+  idEntrega: idEntregaIlheus,
+  idCentroDistribuicao: idCdFeira,
+  idMotorista: idMotoristaCarlos,
+  tipo: "avaria",
+  descricao: "Embalagem da cadeira amassada na carroceria.",
+  dataHora: ISODate("2026-09-17T16:05:00Z"),
+  cidade: "Itabuna",
+  gravidade: "media"
+});
+
+banco.rastreamentos.insertMany([
+  {
+    _id: ObjectId("64fa00000000000000000001"),
+    idEntrega: idEntregaSalvador,
+    latitude: Double(-12.266),
+    longitude: Double(-38.966),
+    cidade: "Feira de Santana",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-16T15:00:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000002"),
+    idEntrega: idEntregaSalvador,
+    latitude: Double(-12.55),
+    longitude: Double(-38.7),
+    cidade: "Amélia Rodrigues",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-16T18:40:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000003"),
+    idEntrega: idEntregaSalvador,
+    latitude: Double(-12.95),
+    longitude: Double(-38.51),
+    cidade: "Salvador",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-16T22:30:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000004"),
+    idEntrega: idEntregaFeira,
+    latitude: Double(-12.977),
+    longitude: Double(-38.501),
+    cidade: "Salvador",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-17T16:10:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000005"),
+    idEntrega: idEntregaFeira,
+    latitude: Double(-12.4),
+    longitude: Double(-38.85),
+    cidade: "Conceição do Jacuípe",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-17T17:20:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000006"),
+    idEntrega: idEntregaSerrinha,
+    latitude: Double(-12.1),
+    longitude: Double(-38.99),
+    cidade: "Feira de Santana",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-15T13:10:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000007"),
+    idEntrega: idEntregaSerrinha,
+    latitude: Double(-11.664),
+    longitude: Double(-39.007),
+    cidade: "Serrinha",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-15T14:12:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000008"),
+    idEntrega: idEntregaIlheus,
+    latitude: Double(-12.266),
+    longitude: Double(-38.966),
+    cidade: "Feira de Santana",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-17T11:05:00Z")
+  },
+  {
+    _id: ObjectId("64fa00000000000000000009"),
+    idEntrega: idEntregaIlheus,
+    latitude: Double(-14.788),
+    longitude: Double(-39.278),
+    cidade: "Itabuna",
+    estado: "BA",
+    registradoEm: ISODate("2026-09-17T18:30:00Z")
+  }
 ]);
 
-// ---------- Conferência rápida ----------
-[
-  "transportadoras", "centrosDistribuicao", "clientes", "produtos", "motoristas",
-  "veiculos", "pedidos", "entregas", "ocorrencias", "rastreamentos",
-].forEach((c) => print(c + ": " + db.getCollection(c).countDocuments()));
+print("Documentos inseridos em logitrack.");
+print("transportadoras: " + banco.transportadoras.countDocuments());
+print("centrosDistribuicao: " + banco.centrosDistribuicao.countDocuments());
+print("motoristas: " + banco.motoristas.countDocuments());
+print("veiculos: " + banco.veiculos.countDocuments());
+print("clientes: " + banco.clientes.countDocuments());
+print("produtos: " + banco.produtos.countDocuments());
+print("pedidos: " + banco.pedidos.countDocuments());
+print("entregas: " + banco.entregas.countDocuments());
+print("ocorrencias: " + banco.ocorrencias.countDocuments());
+print("rastreamentos: " + banco.rastreamentos.countDocuments());
