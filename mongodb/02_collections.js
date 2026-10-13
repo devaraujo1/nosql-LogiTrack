@@ -1,265 +1,195 @@
 const banco = db.getSiblingDB("logitrack");
 
-const schemas = {
-  clientes: {
-    bsonType: "object",
-    required: ["_id", "nome", "email", "telefone", "tipoPessoa", "ativo", "dataCadastro"],
-    properties: {
-      _id: { bsonType: "objectId" },
-      nome: { bsonType: "string" },
-      email: { bsonType: "string" },
-      telefone: { bsonType: "string" },
-      tipoPessoa: { enum: ["PF", "PJ"] },
-      documento: { bsonType: "string" },
-      ativo: { bsonType: "bool" },
-      dataCadastro: { bsonType: "date" },
-      endereco: {
+const endereco = {
+  bsonType: "object",
+  required: ["rua", "numero", "bairro", "cidade", "estado", "cep", "pais"],
+  properties: {
+    rua: { bsonType: "string" },
+    numero: { bsonType: "string" },
+    complemento: { bsonType: "string" },
+    bairro: { bsonType: "string" },
+    cidade: { bsonType: "string" },
+    estado: { bsonType: "string" },
+    cep: { bsonType: "string" },
+    pais: { bsonType: "string" }
+  }
+};
+
+const dimensoes = {
+  bsonType: "object",
+  required: ["comprimentoCm", "larguraCm", "alturaCm"],
+  properties: {
+    comprimentoCm: { bsonType: "double" },
+    larguraCm: { bsonType: "double" },
+    alturaCm: { bsonType: "double" }
+  }
+};
+
+function criar(nome, required, properties) {
+  properties._id = { bsonType: "objectId" };
+  banco.createCollection(nome, {
+    validator: {
+      $jsonSchema: {
         bsonType: "object",
-        required: ["logradouro", "numero", "cidade", "estado", "cep"],
-        properties: {
-          logradouro: { bsonType: "string" },
-          numero: { bsonType: "string" },
-          complemento: { bsonType: ["string", "null"] },
-          bairro: { bsonType: "string" },
-          cidade: { bsonType: "string" },
-          estado: { bsonType: "string" },
-          cep: { bsonType: "string" }
-        }
+        required: required,
+        properties: properties,
+        additionalProperties: false
+      }
+    },
+    validationLevel: "strict",
+    validationAction: "error"
+  });
+  print("Collection criada: " + nome);
+}
+
+criar("clientes", ["nome", "tipo", "documento", "email", "telefone", "endereco", "criadoEm", "atualizadoEm"], {
+  nome: { bsonType: "string" },
+  tipo: { enum: ["PF", "PJ"] },
+  documento: { bsonType: "string" },
+  email: { bsonType: "string" },
+  telefone: { bsonType: "string" },
+  endereco: endereco,
+  criadoEm: { bsonType: "date" },
+  atualizadoEm: { bsonType: "date" }
+});
+
+criar("produtos", ["nome", "codigo", "categoria", "pesoKg", "dimensoes", "fragil", "ativo"], {
+  nome: { bsonType: "string" },
+  codigo: { bsonType: "string" },
+  categoria: { bsonType: "string" },
+  pesoKg: { bsonType: "double" },
+  dimensoes: dimensoes,
+  fragil: { bsonType: "bool" },
+  ativo: { bsonType: "bool" }
+});
+
+criar("transportadoras", ["nome", "documento", "email", "telefone", "endereco", "ativo"], {
+  nome: { bsonType: "string" },
+  documento: { bsonType: "string" },
+  email: { bsonType: "string" },
+  telefone: { bsonType: "string" },
+  endereco: endereco,
+  ativo: { bsonType: "bool" }
+});
+
+criar("centrosDistribuicao", ["nome", "codigo", "endereco", "ativo"], {
+  nome: { bsonType: "string" },
+  codigo: { bsonType: "string" },
+  endereco: endereco,
+  ativo: { bsonType: "bool" }
+});
+
+criar("motoristas", ["idTransportadora", "nome", "documento", "numeroCnh", "telefone", "situacao"], {
+  idTransportadora: { bsonType: "objectId" },
+  nome: { bsonType: "string" },
+  documento: { bsonType: "string" },
+  numeroCnh: { bsonType: "string" },
+  telefone: { bsonType: "string" },
+  situacao: { enum: ["disponivel", "em_rota", "inativo"] }
+});
+
+criar("veiculos", ["idTransportadora", "placa", "tipo", "capacidadeKg", "situacao"], {
+  idTransportadora: { bsonType: "objectId" },
+  placa: { bsonType: "string" },
+  tipo: { enum: ["van", "caminhao", "motocicleta"] },
+  capacidadeKg: { bsonType: "int" },
+  situacao: { enum: ["disponivel", "em_uso", "manutencao"] }
+});
+
+criar("pedidos", ["idCliente", "situacao", "origem", "destino", "volumes", "pagamento", "criadoEm", "atualizadoEm"], {
+  idCliente: { bsonType: "objectId" },
+  situacao: { enum: ["criado", "pago", "em_transito", "entregue", "cancelado"] },
+  origem: endereco,
+  destino: endereco,
+  volumes: {
+    bsonType: "array",
+    items: {
+      bsonType: "object",
+      required: ["codigo", "idProduto", "nomeProduto", "pesoKg", "dimensoes", "quantidade"],
+      properties: {
+        codigo: { bsonType: "string" },
+        idProduto: { bsonType: "objectId" },
+        nomeProduto: { bsonType: "string" },
+        pesoKg: { bsonType: "double" },
+        dimensoes: dimensoes,
+        quantidade: { bsonType: "int" }
       }
     }
   },
-
-  produtos: {
+  pagamento: {
     bsonType: "object",
-    required: ["_id", "codigoProduto", "nome", "pesoKg", "fragil", "ativo"],
+    required: ["forma", "valor", "situacao"],
     properties: {
-      _id: { bsonType: "objectId" },
-      codigoProduto: { bsonType: "string" },
-      nome: { bsonType: "string" },
-      descricao: { bsonType: "string" },
-      pesoKg: { bsonType: ["double", "int", "long", "decimal"] },
-      fragil: { bsonType: "bool" },
-      ativo: { bsonType: "bool" }
+      forma: { enum: ["pix", "boleto", "cartao"] },
+      valor: { bsonType: "decimal" },
+      situacao: { enum: ["pendente", "pago"] },
+      pagoEm: { bsonType: "date" }
     }
   },
+  criadoEm: { bsonType: "date" },
+  atualizadoEm: { bsonType: "date" }
+});
 
-  pedidos: {
+criar("entregas", ["idPedido", "idTransportadora", "idMotorista", "idVeiculo", "idCentroDistribuicao", "situacao", "atrasado", "prometidoPara", "destino", "rota", "horariosEtapas", "rastreioAtual", "criadoEm", "atualizadoEm"], {
+  idPedido: { bsonType: "objectId" },
+  idTransportadora: { bsonType: "objectId" },
+  idMotorista: { bsonType: "objectId" },
+  idVeiculo: { bsonType: "objectId" },
+  idCentroDistribuicao: { bsonType: "objectId" },
+  situacao: { enum: ["no_cd", "em_transito", "entregue", "falhou"] },
+  atrasado: { bsonType: "bool" },
+  prometidoPara: { bsonType: "date" },
+  destino: endereco,
+  rota: {
     bsonType: "object",
-    required: ["_id", "idCliente", "situacao", "dataPedido", "origem", "destino", "volumes", "pagamento"],
+    required: ["distanciaKm", "duracaoPrevistaMin", "duracaoRealMin"],
     properties: {
-      _id: { bsonType: "objectId" },
-      idCliente: { bsonType: "objectId" },
-      situacao: { bsonType: "string" },
-      dataPedido: { bsonType: "date" },
-      origem: {
-        bsonType: "object",
-        properties: {
-          cidade: { bsonType: "string" },
-          estado: { bsonType: "string" },
-          cep: { bsonType: "string" },
-          endereco: { bsonType: "string" }
-        }
-      },
-      destino: {
-        bsonType: "object",
-        required: ["cidade", "estado"],
-        properties: {
-          cidade: { bsonType: "string" },
-          estado: { bsonType: "string" },
-          cep: { bsonType: "string" },
-          endereco: { bsonType: "string" }
-        }
-      },
-      volumes: {
-        bsonType: "array",
-        items: {
-          bsonType: "object",
-          required: ["idProduto", "nomeProduto", "pesoKg", "quantidade"],
-          properties: {
-            idProduto: { bsonType: "objectId" },
-            nomeProduto: { bsonType: "string" },
-            pesoKg: { bsonType: ["double", "int", "long", "decimal"] },
-            quantidade: { bsonType: "int" },
-            fragil: { bsonType: "bool" }
-          }
-        }
-      },
-      pagamento: {
-        bsonType: "object",
-        properties: {
-          metodo: { bsonType: "string" },
-          status: { bsonType: "string" },
-          valorProdutos: { bsonType: ["decimal", "double", "int", "long"] },
-          dataPagamento: { bsonType: ["date", "null"] }
-        }
-      }
+      distanciaKm: { bsonType: "double" },
+      duracaoPrevistaMin: { bsonType: "int" },
+      duracaoRealMin: { bsonType: "int" }
     }
   },
-
-  entregas: {
+  horariosEtapas: {
     bsonType: "object",
-    required: ["_id", "idPedido", "idMotorista", "idVeiculo", "idTransportadora", "idCentroDistribuicao", "situacao", "atrasada", "prazoEntrega", "rota"],
     properties: {
-      _id: { bsonType: "objectId" },
-      idPedido: { bsonType: "objectId" },
-      idMotorista: { bsonType: "objectId" },
-      idVeiculo: { bsonType: "objectId" },
-      idTransportadora: { bsonType: "objectId" },
-      idCentroDistribuicao: { bsonType: "objectId" },
-      situacao: { bsonType: "string" },
-      atrasada: { bsonType: "bool" },
-      prazoEntrega: { bsonType: "date" },
-      dataSaida: { bsonType: ["date", "null"] },
-      dataEntrega: { bsonType: ["date", "null"] },
-      rota: {
-        bsonType: "object",
-        properties: {
-          origem: { bsonType: "string" },
-          destino: { bsonType: "string" },
-          distanciaKm: { bsonType: ["double", "int", "long", "decimal"] },
-          duracaoPrevistaMin: { bsonType: "int" },
-          duracaoRealMin: { bsonType: "int" },
-          etapas: {
-            bsonType: "array",
-            items: {
-              bsonType: "object",
-              properties: {
-                descricao: { bsonType: "string" },
-                horarioPrevisto: { bsonType: "date" },
-                horarioReal: { bsonType: ["date", "null"] }
-              }
-            }
-          }
-        }
-      },
-      ultimoRastreio: {
-        bsonType: ["object", "null"],
-        properties: {
-          latitude: { bsonType: ["double", "int", "long", "decimal"] },
-          longitude: { bsonType: ["double", "int", "long", "decimal"] },
-          dataHora: { bsonType: "date" },
-          cidade: { bsonType: "string" },
-          status: { bsonType: "string" }
-        }
-      },
-      frete: { bsonType: "decimal" }
+      recebidoNoCdEm: { bsonType: "date" },
+      saiuEm: { bsonType: "date" },
+      chegouEm: { bsonType: "date" },
+      entregueEm: { bsonType: "date" }
     }
   },
-
-  transportadoras: {
+  rastreioAtual: {
     bsonType: "object",
-    required: ["_id", "nome", "cnpj", "ativo", "endereco"],
+    required: ["latitude", "longitude", "cidade", "estado", "registradoEm"],
     properties: {
-      _id: { bsonType: "objectId" },
-      nome: { bsonType: "string" },
-      cnpj: { bsonType: "string" },
-      telefone: { bsonType: "string" },
-      ativo: { bsonType: "bool" },
-      endereco: {
-        bsonType: "object",
-        properties: {
-          logradouro: { bsonType: "string" },
-          numero: { bsonType: "string" },
-          cidade: { bsonType: "string" },
-          estado: { bsonType: "string" },
-          cep: { bsonType: "string" }
-        }
-      }
-    }
-  },
-
-  motoristas: {
-    bsonType: "object",
-    required: ["_id", "nome", "cpf", "telefone", "disponivel", "ativo"],
-    properties: {
-      _id: { bsonType: "objectId" },
-      nome: { bsonType: "string" },
-      cpf: { bsonType: "string" },
-      telefone: { bsonType: "string" },
-      cnh: { bsonType: "string" },
-      disponivel: { bsonType: "bool" },
-      ativo: { bsonType: "bool" }
-    }
-  },
-
-  veiculos: {
-    bsonType: "object",
-    required: ["_id", "placa", "tipo", "capacidadeKg", "ativo"],
-    properties: {
-      _id: { bsonType: "objectId" },
-      placa: { bsonType: "string" },
-      tipo: { bsonType: "string" },
-      capacidadeKg: { bsonType: ["double", "int", "long", "decimal"] },
-      ativo: { bsonType: "bool" }
-    }
-  },
-
-  centrosDistribuicao: {
-    bsonType: "object",
-    required: ["_id", "nome", "endereco", "ativo"],
-    properties: {
-      _id: { bsonType: "objectId" },
-      nome: { bsonType: "string" },
-      endereco: {
-        bsonType: "object",
-        required: ["cidade", "estado"],
-        properties: {
-          logradouro: { bsonType: "string" },
-          numero: { bsonType: "string" },
-          cidade: { bsonType: "string" },
-          estado: { bsonType: "string" },
-          cep: { bsonType: "string" }
-        }
-      },
-      ativo: { bsonType: "bool" }
-    }
-  },
-
-  ocorrencias: {
-    bsonType: "object",
-    required: ["_id", "idEntrega", "tipo", "descricao", "dataHora"],
-    properties: {
-      _id: { bsonType: "objectId" },
-      idEntrega: { bsonType: "objectId" },
-      tipo: { enum: ["atraso", "avaria", "outro"] },
-      descricao: { bsonType: "string" },
-      dataHora: { bsonType: "date" },
-      minutosAtraso: { bsonType: "int" },
-      gravidade: { enum: ["baixa", "media", "alta", "critica"] }
-    }
-  },
-
-  rastreamentos: {
-    bsonType: "object",
-    required: ["_id", "idEntrega", "latitude", "longitude", "dataHora"],
-    properties: {
-      _id: { bsonType: "objectId" },
-      idEntrega: { bsonType: "objectId" },
       latitude: { bsonType: "double" },
       longitude: { bsonType: "double" },
       cidade: { bsonType: "string" },
       estado: { bsonType: "string" },
-      status: { bsonType: "string" },
-      dataHora: { bsonType: "date" }
+      registradoEm: { bsonType: "date" }
     }
-  }
-};
+  },
+  criadoEm: { bsonType: "date" },
+  atualizadoEm: { bsonType: "date" }
+});
 
-for (const [nome, jsonSchema] of Object.entries(schemas)) {
-  const existe = banco.getCollectionInfos({ name: nome }).length > 0;
+criar("ocorrencias", ["idEntrega", "idCentroDistribuicao", "idMotorista", "tipo", "descricao", "dataHora", "cidade"], {
+  idEntrega: { bsonType: "objectId" },
+  idCentroDistribuicao: { bsonType: "objectId" },
+  idMotorista: { bsonType: "objectId" },
+  tipo: { enum: ["atraso", "avaria", "ausente", "recusa", "outro"] },
+  descricao: { bsonType: "string" },
+  dataHora: { bsonType: "date" },
+  cidade: { bsonType: "string" },
+  minutosAtraso: { bsonType: "int" },
+  gravidade: { bsonType: "string" }
+});
 
-  if (!existe) {
-    banco.createCollection(nome, {
-      validator: { $jsonSchema: jsonSchema },
-      validationLevel: "strict",
-      validationAction: "error"
-    });
-  } else {
-    banco.runCommand({
-      collMod: nome,
-      validator: { $jsonSchema: jsonSchema },
-      validationLevel: "strict",
-      validationAction: "error"
-    });
-  }
-}
+criar("rastreamentos", ["idEntrega", "latitude", "longitude", "cidade", "estado", "registradoEm"], {
+  idEntrega: { bsonType: "objectId" },
+  latitude: { bsonType: "double" },
+  longitude: { bsonType: "double" },
+  cidade: { bsonType: "string" },
+  estado: { bsonType: "string" },
+  registradoEm: { bsonType: "date" }
+});
