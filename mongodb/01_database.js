@@ -1,6 +1,5 @@
-const nomeBanco = "logitrack";
-const bancoAnterior = db.getSiblingDB(nomeBanco);
+const banco = db.getSiblingDB("logitrack");
 
-bancoAnterior.dropDatabase();
+banco.dropDatabase();
 
-print("Banco de dados 'logitrack' limpo e recriado com sucesso.");
+print("Banco logitrack recriado.");
