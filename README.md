@@ -58,22 +58,23 @@ nosql-LogiTrack/
 │   ├── 04_queries.js
 │   └── 05_relationships.js
 ├── docs/
-│   ├── architecture.md
-│   ├── implementation.md
-│   └── api.md
+│   └── architecture.md
 ├── src/
 │   ├── main/java/br/com/logi_track/aplicacao_api/
-│   │   ├── models/
-│   │   ├── repositories/
-│   │   ├── services/
-│   │   ├── controllers/
-│   │   ├── exception/
+│   │   ├── models/          (entidades — a preencher)
+│   │   ├── repositories/    (persistência — a preencher)
+│   │   ├── services/        (regras — a preencher)
+│   │   ├── controllers/     (API REST — a preencher)
+│   │   ├── exception/       (erros HTTP — a preencher)
 │   │   └── AplicacaoApiApplication.java
 │   └── main/resources/application.properties
 ├── pom.xml
 ├── .gitignore
 └── README.md
 ```
+
+As pastas de código já existem. Cada pessoa coloca as classes na pasta da camada dela; o projeto Maven já sobe com a configuração atual.
+
 
 ## Evolução do projeto
 
@@ -171,6 +172,5 @@ Exemplos de body e códigos HTTP: [`docs/api.md`](docs/api.md).
 | --- | --- |
 | [`modeling/entities.md`](modeling/entities.md) | Entidades, atributos e responsabilidade no domínio |
 | [`modeling/relationships.md`](modeling/relationships.md) | Cardinalidade, embed × reference e justificativas |
-| [`docs/architecture.md`](docs/architecture.md) | Camadas da API |
-| [`docs/implementation.md`](docs/implementation.md) | Decisões técnicas e integridade |
-| [`docs/api.md`](docs/api.md) | Endpoints e exemplos (Postman / Insomnia) |
+| [`docs/architecture.md`](docs/architecture.md) | Camadas da aplicação e pacotes Java |
+| `docs/implementation.md` / `docs/api.md` | Entrarão com a implementação da API (regras, endpoints e exemplos) |

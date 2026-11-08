@@ -31,8 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Segredos / ambiente ###
-.env
-*.env
-credentials.*
