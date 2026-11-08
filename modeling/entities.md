@@ -1,7 +1,5 @@
  LogiTrack — Levantamento de entidades
 
-Revisão da atividade 3: as 14 entidades foram mantidas. Este arquivo fica em `modeling/entities.md`. A justificativa de embed e referência fica em `modeling/relationships.md`. Os scripts de banco, inserção e consulta ficam em `mongodb/`.
-
 ## Como os dados serão utilizados pela aplicação?
 
 A LogiTrack acompanha:

@@ -1,6 +1,4 @@
-// LogiTrack — Atividade 3
-// Responsável: Enzo Cabral Lopes
-//
+// LogiTrack
 // Percorre uma entrega atrasada para Salvador.
 // Cadastros compartilhados são lidos pelo _id guardado na entrega.
 // Rota, último GPS, destino e volumes saem do próprio documento,

@@ -1,20 +1,6 @@
-# LogiTrack
+# LogiTrack — Atividade 4
 
-Plataforma inteligente de logística e entregas. Projeto da disciplina de NoSQL (MongoDB).
-
-## Descrição
-
-Projeto desenvolvido pela equipe ao longo da disciplina, com o objetivo de aplicar os conhecimentos adquiridos nas atividades e construir uma solução com banco de dados MongoDB.
-
-A LogiTrack não só registra pedidos: acompanha a operação do pedido até a entrega e permite analisar desempenho — atrasos por região, motoristas, rotas, horários e centros de distribuição.
-
-Fluxo do domínio:
-
-Pedido → Centro de distribuição → Veículo → Motorista → Rota → Eventos → Entrega
-
-## Objetivo
-
-Desenvolver uma solução que aplique conceitos de desenvolvimento de software, organização de dados e uso do MongoDB, com boa estruturação e versionamento de código.
+API REST em Java com Spring Boot e MongoDB para a plataforma LogiTrack (logística e entregas).
 
 ## Integrantes
 
@@ -24,36 +10,109 @@ Desenvolver uma solução que aplique conceitos de desenvolvimento de software, 
 - João Paulo de Oliveira Carneiro
 - Enzo Cabral Lopes
 
-## Estrutura do projeto
+## Objetivo
 
-```text
-/
-├── mongodb/
-│   ├── 01_database.js
-│   ├── 02_collections.js
-│   ├── 03_insert_data.js
-│   ├── 04_queries.js
-│   └── 05_relationships.js
-├── modeling/
-│   ├── entities.md
-│   └── relationships.md
-└── README.md
-```
+Transformar a modelagem das atividades anteriores em uma aplicação Java funcional, com persistência MongoDB, regras de negócio e API REST, mantendo a coerência com embeds e referências já definidos.
 
-- `modeling/entities.md` — entidades levantadas na atividade anterior.
-- `modeling/relationships.md` — cardinalidade, embed, referência e justificativa da modelagem.
-- `mongodb/` — scripts para criar o banco, inserir os documentos de exemplo e consultar.
+## Tecnologias
 
-## Como executar
+- Java 25
+- Spring Boot 4.1.2
+- Spring Data MongoDB
+- Spring Web
+- Maven
+- MongoDB
 
-É preciso ter o MongoDB em execução na máquina e o `mongosh` instalado. Na raiz do repositório:
+## Como abrir no IntelliJ e ligar
+
+1. Abra o IntelliJ IDEA.
+2. **File → Open** e selecione a pasta `atividade-4-completa` (detecta o Maven pelo `pom.xml`).
+3. Aguarde o IntelliJ baixar as dependências.
+4. Suba o MongoDB local na porta `27017`.
+5. (Opcional) Carregue os dados de exemplo:
 
 ```text
 mongosh mongodb/01_database.js
 mongosh mongodb/02_collections.js
 mongosh mongodb/03_insert_data.js
-mongosh mongodb/04_queries.js
-mongosh mongodb/05_relationships.js
 ```
 
-O primeiro script recria o banco `logitrack`. A ordem importa: as collections nascem no segundo, os documentos no terceiro, e as consultas usam esses dados.
+6. Execute a classe `AplicacaoApiApplication`.
+7. A API fica em `http://localhost:8080`.
+
+## Configuração do MongoDB
+
+Arquivo `src/main/resources/application.properties`:
+
+```properties
+spring.mongodb.host=localhost
+spring.mongodb.port=27017
+spring.mongodb.database=logitrack
+```
+
+Não publique senhas ou credenciais no repositório.
+
+## Principais entidades implementadas
+
+Collections (`@Document`): Cliente, Pedido, Produto, Entrega, CentroDistribuicao, Motorista, Veiculo, Transportadora, Ocorrencia, Rastreamento.
+
+Documentos incorporados: Endereco, Volume, Pagamento, Dimensoes, Rota, HorariosEtapas, RastreioAtual.
+
+## Estratégias Embedded e References
+
+- **Embedded:** `Cliente.endereco`, `Pedido.volumes`, `Pedido.pagamento`, `Entrega.rota`, `Entrega.rastreioAtual`.
+- **References (campos id):** `Pedido.idCliente`, `Volume.idProduto`, `Entrega.idPedido`, `Entrega.idMotorista`, `Entrega.idVeiculo`, `Entrega.idTransportadora`, `Entrega.idCentroDistribuicao`.
+
+A recuperação dos relacionados é feita nos services (consultas aos repositories + combinação do resultado).
+
+## Endpoints (CRUD completo)
+
+| Recurso | Base |
+| --- | --- |
+| Clientes | `/api/clientes` |
+| Pedidos | `/api/pedidos` |
+| Entregas | `/api/entregas` |
+
+Para cada um: POST (criar), GET (listar), GET `/{id}`, PUT `/{id}`, DELETE `/{id}`.
+
+Extras:
+
+- `GET /api/pedidos/{id}/com-cliente`
+- `GET /api/entregas/{id}/relacionados`
+- `GET /api/entregas?atrasadas=true`
+- `GET /api/pedidos?idCliente=...`
+
+Detalhes e exemplos: [docs/api.md](docs/api.md).
+
+## Regras de negócio
+
+1. Não cadastrar cliente com e-mail duplicado (409).
+2. Não cadastrar pedido sem volumes (400).
+3. Não criar entrega com pedido ou motorista inexistente (400).
+
+## Estrutura do projeto
+
+```text
+atividade-4-completa/
+├── src/main/java/br/com/logi_track/aplicacao_api/
+│   ├── controllers/
+│   ├── services/
+│   ├── repositories/
+│   ├── models/
+│   ├── exception/
+│   └── AplicacaoApiApplication.java
+├── src/main/resources/application.properties
+├── modeling/
+├── mongodb/
+├── docs/
+├── pom.xml
+└── README.md
+```
+
+## Documentação
+
+- [docs/architecture.md](docs/architecture.md)
+- [docs/implementation.md](docs/implementation.md)
+- [docs/api.md](docs/api.md)
+- [modeling/entities.md](modeling/entities.md)
+- [modeling/relationships.md](modeling/relationships.md)

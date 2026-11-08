@@ -1,5 +1,4 @@
-// LogiTrack — Atividade 3
-// Responsável: Enzo Cabral Lopes
+// LogiTrack 
 //
 // Consultas da operação. Cada bloco indica a tela ou a regra da atividade.
 // Os ObjectId são os mesmos inseridos em 03_insert_data.js.

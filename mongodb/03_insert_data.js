@@ -1,6 +1,4 @@
-// LogiTrack — Atividade 3
-// Responsável: João Paulo de Oliveira Carneiro
-//
+// LogiTrack 
 // Documentos de exemplo da operação na Bahia.
 // ObjectId fixo para os outros scripts apontarem para o mesmo documento.
 // insertOne e insertMany aparecem de propósito.
