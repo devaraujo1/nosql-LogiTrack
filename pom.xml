@@ -12,7 +12,7 @@
 	<artifactId>aplicacao-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>aplicacao-api</name>
-	<description>LogiTrack — API Spring Boot com MongoDB (Atividade 4)</description>
+	<description>LogiTrack - API Spring Boot com MongoDB (Atividade 4)</description>
 	<properties>
 		<java.version>25</java.version>
 	</properties>
