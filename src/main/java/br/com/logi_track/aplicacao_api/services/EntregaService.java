@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +70,7 @@ public class EntregaService {
 	}
 
 	public List<Entrega> listarPorMotorista(String idMotorista) {
-		return entregaRepository.findByIdMotorista(idMotorista);
+		return entregaRepository.findByIdMotorista(new ObjectId(idMotorista));
 	}
 
 	public Entrega buscarPorId(String id) {
@@ -96,9 +97,9 @@ public class EntregaService {
 	public Entrega atualizar(String id, Entrega dados) {
 		Entrega existente = buscarPorId(id);
 		validarReferencias(dados);
-		existente.setIdPedido(dados.getIdPedido());
+		existente.setPedido(dados.getPedido());
 		existente.setIdTransportadora(dados.getIdTransportadora());
-		existente.setIdMotorista(dados.getIdMotorista());
+		existente.setMotorista(dados.getMotorista());
 		existente.setIdVeiculo(dados.getIdVeiculo());
 		existente.setIdCentroDistribuicao(dados.getIdCentroDistribuicao());
 		existente.setSituacao(dados.getSituacao());

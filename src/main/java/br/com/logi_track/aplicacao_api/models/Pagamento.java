@@ -3,11 +3,20 @@ package br.com.logi_track.aplicacao_api.models;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Pagamento {
 
+	@NotBlank
 	private String forma;
+
+	@NotNull
 	private BigDecimal valor;
+
+	@NotBlank
 	private String situacao;
+
 	private LocalDateTime pagoEm;
 
 	public Pagamento() {

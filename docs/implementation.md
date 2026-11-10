@@ -2,48 +2,60 @@
 
 ## Identificadores
 
-`_id` como `String` no Java, correspondente ao `ObjectId` do MongoDB. IDs de negócio (placa, código de produto, código de volume) permanecem em campos separados, como na modelagem.
+No Java o `_id` é `String`. No MongoDB continua ObjectId.
 
-## Tipos Java
+As referências (`idCliente`, `idPedido`, etc.) também vão como ObjectId no banco, igual aos scripts da atividade anterior. No código usamos `@DocumentReference` ou `@Field(targetType = OBJECT_ID)`.
 
-| Domínio | Tipo Java |
-| --- | --- |
-| Texto | `String` |
-| Contagens / minutos / capacidade | `Integer` (não `int`) |
-| Peso / GPS / distância | `Double` |
-| Valor monetário | `BigDecimal` |
-| Datas | `LocalDateTime` |
-| Flags | `Boolean` |
-| Listas | `List<...>` |
+## Tipos
 
-## Embedded Documents
+- texto → `String`
+- quantidade / minutos → `Integer` (sem `int`)
+- peso / GPS → `Double`
+- dinheiro → `BigDecimal`
+- data/hora → `LocalDateTime`
+- flags → `Boolean`
+- listas → `List`
 
-Implementados como classes POJO sem `@Document`:
+## Embedded
 
-- `Endereco` — Cliente, Transportadora, Centro, origem/destino do Pedido, destino da Entrega
-- `Volume` + `Dimensoes` — dentro de `Pedido.volumes`
-- `Pagamento` — dentro de `Pedido.pagamento`
-- `Rota`, `HorariosEtapas`, `RastreioAtual` — dentro de `Entrega`
+Classes sem `@Document`, dentro do documento pai:
+
+- `Endereco`
+- `Volume` + `Dimensoes`
+- `Pagamento`
+- `Rota`, `HorariosEtapas`, `RastreioAtual`
 
 ## References
 
-Campos `String idX` (ex.: `idCliente`, `idMotorista`), no mesmo espírito dos scripts da Atividade 3. A aplicação valida existência no service antes de gravar. Endpoints `.../com-cliente` e `.../relacionados` combinam resultados de vários repositories.
+Usamos `@DocumentReference` nestes casos:
+
+- Pedido → Cliente (`idCliente`)
+- Entrega → Pedido (`idPedido`)
+- Entrega → Motorista (`idMotorista`)
+
+Os outros ids (`idProduto`, `idVeiculo`, `idTransportadora`, `idCentroDistribuicao`) ficam como campo com `OBJECT_ID`.
+
+Para montar os dados relacionados:
+
+- `GET /api/pedidos/{id}/com-cliente`
+- `GET /api/entregas/{id}/relacionados`
+
+## Validação
+
+Tem `@Valid` nos controllers e anotações nos models (`@NotBlank`, `@Email`, etc.).  
+As regras mais importantes ficam no service.
 
 ## Regras de negócio
 
-1. **E-mail único de cliente** — evita duplicidade indevida (409 Conflict).
-2. **Pedido com volumes** — impede pedido comercial vazio (400 Bad Request).
-3. **Entrega com pedido e motorista válidos** — o MongoDB não garante integridade referencial; a checagem é feita na aplicação (também transportadora, veículo e CD).
+1. e-mail de cliente não pode repetir → 409
+2. pedido precisa ter volumes → 400
+3. entrega só com pedido e motorista existentes → 400
 
-## Integridade dos dados
+## Integridade
 
-| Risco | Como a aplicação evita |
-| --- | --- |
-| Dados inválidos / campos obrigatórios | Validação nos services antes do `save` |
-| Referência a documento inexistente | `existsById` nos repositories relacionados |
-| Duplicidade de e-mail | `existsByEmail` / `findByEmail` |
-| Atualizações inconsistentes | Atualização carrega o documento existente, aplica campos e grava de uma vez; `atualizadoEm` é renovado |
+O MongoDB não checa referência sozinho. Antes de salvar a gente confere se o id existe (`existsById`).  
+Também evitamos o campo `_class` do Spring (`MongoConfig`), porque o validator das collections não aceita campo extra.
 
-## Alterações em relação à modelagem
+## Mudança em relação à modelagem
 
-Nenhuma mudança estrutural de collection ou de estratégia embed/referência. A implementação segue `modeling/entities.md` e `modeling/relationships.md`.
+Não mudamos collections nem embed/reference. Só adaptamos para o Spring gravar as refs como ObjectId e usar `@DocumentReference` onde o enunciado pede.

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 @Document(collection = "rastreamentos")
 public class Rastreamento {
@@ -12,7 +13,7 @@ public class Rastreamento {
 	@Id
 	private String id;
 
-	@Field("idEntrega")
+	@Field(name = "idEntrega", targetType = FieldType.OBJECT_ID)
 	private String idEntrega;
 
 	@Field("latitude")

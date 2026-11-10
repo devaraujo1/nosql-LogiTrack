@@ -6,6 +6,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 @Document(collection = "clientes")
 public class Cliente {
 
@@ -13,21 +18,29 @@ public class Cliente {
 	private String id;
 
 	@Field("nome")
+	@NotBlank
 	private String nome;
 
 	@Field("tipo")
+	@NotBlank
 	private String tipo;
 
 	@Field("documento")
+	@NotBlank
 	private String documento;
 
 	@Field("email")
+	@NotBlank
+	@Email
 	private String email;
 
 	@Field("telefone")
+	@NotBlank
 	private String telefone;
 
 	@Field("endereco")
+	@NotNull
+	@Valid
 	private Endereco endereco;
 
 	@Field("criadoEm")

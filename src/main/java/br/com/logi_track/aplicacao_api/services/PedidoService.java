@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public class PedidoService {
 	}
 
 	public List<Pedido> listarPorCliente(String idCliente) {
-		return pedidoRepository.findByIdCliente(idCliente);
+		return pedidoRepository.findByIdCliente(new ObjectId(idCliente));
 	}
 
 	public Pedido buscarPorId(String id) {
@@ -59,20 +60,24 @@ public class PedidoService {
 
 	public Map<String, Object> buscarComCliente(String id) {
 		Pedido pedido = buscarPorId(id);
-		Cliente cliente = clienteRepository.findById(pedido.getIdCliente())
+		Cliente cliente = pedido.getCliente();
+		if (cliente == null || cliente.getId() == null) {
+			throw new RecursoNaoEncontradoException("Pedido sem cliente referenciado: " + id);
+		}
+		Cliente completo = clienteRepository.findById(cliente.getId())
 				.orElseThrow(() -> new RecursoNaoEncontradoException(
-						"Cliente referenciado pelo pedido nao existe: " + pedido.getIdCliente()));
+						"Cliente referenciado pelo pedido nao existe: " + cliente.getId()));
 
 		Map<String, Object> resultado = new HashMap<>();
 		resultado.put("pedido", pedido);
-		resultado.put("cliente", cliente);
+		resultado.put("cliente", completo);
 		return resultado;
 	}
 
 	public Pedido atualizar(String id, Pedido dados) {
 		Pedido existente = buscarPorId(id);
 		validar(dados);
-		existente.setIdCliente(dados.getIdCliente());
+		existente.setCliente(dados.getCliente());
 		existente.setSituacao(dados.getSituacao());
 		existente.setOrigem(dados.getOrigem());
 		existente.setDestino(dados.getDestino());
