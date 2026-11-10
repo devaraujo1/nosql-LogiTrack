@@ -114,6 +114,8 @@ Alguns endpoints extras que fizemos:
 
 Exemplos de request/response e códigos HTTP estão em [`docs/api.md`](docs/api.md).
 
+Dá para testar no Postman ou no Insomnia usando esses exemplos.
+
 ## Regras de negócio
 
 1. Não cadastrar cliente com e-mail duplicado → **409**
