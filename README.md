@@ -1,30 +1,6 @@
 # LogiTrack
 
-Plataforma inteligente de logística e entregas. Projeto da disciplina de NoSQL (MongoDB).
-
-## O que é o projeto
-
-A LogiTrack acompanha a operação do **pedido até a entrega** e permite analisar desempenho: atrasos por região, motoristas, rotas, horários e centros de distribuição.
-
-Fluxo do domínio:
-
-```text
-Pedido → Centro de distribuição → Veículo → Motorista → Rota → Eventos → Entrega
-```
-
-Perguntas que o sistema precisa responder:
-
-1. Onde estão as entregas?
-2. Quais regiões atrasam mais?
-3. Qual motorista tem melhor desempenho?
-4. Quais rotas são mais eficientes?
-5. Quais horários geram atraso?
-6. Qual centro de distribuição apresenta problemas?
-7. Quanto tempo cada etapa demora?
-
-## Objetivo
-
-Construir, ao longo da disciplina, uma solução completa com MongoDB: levantamento de entidades, modelagem (embed vs referência), scripts de banco e, por fim, uma API Java com Spring Boot alinhada a essa modelagem.
+Projeto da disciplina de NoSQL — plataforma de logística e entregas com MongoDB e Spring Boot.
 
 ## Integrantes
 
@@ -34,81 +10,47 @@ Construir, ao longo da disciplina, uma solução completa com MongoDB: levantame
 - João Paulo de Oliveira Carneiro
 - Enzo Cabral Lopes
 
-## Como o repositório está organizado
+## Sobre o projeto
 
-O projeto cresceu em etapas. Cada pasta tem um papel:
+A ideia da LogiTrack é acompanhar o pedido desde a criação até a entrega final, e também permitir análises do tipo: onde está a entrega, quais regiões atrasam mais, desempenho de motoristas, rotas e centros de distribuição.
 
-| Pasta / área | Papel |
-| --- | --- |
-| `modeling/` | Documentação das entidades e dos relacionamentos (embed × reference) |
-| `mongodb/` | Scripts `mongosh` para criar o banco, collections, dados e consultas |
-| `src/` | Aplicação Spring Boot (models, repositories, services, controllers) |
-| `docs/` | Arquitetura, decisões de implementação e exemplos da API |
-| `pom.xml` | Projeto Maven (`aplicacao-api`) |
+Fluxo que usamos no domínio:
 
 ```text
-nosql-LogiTrack/
-├── modeling/
-│   ├── entities.md
-│   └── relationships.md
-├── mongodb/
-│   ├── 01_database.js
-│   ├── 02_collections.js
-│   ├── 03_insert_data.js
-│   ├── 04_queries.js
-│   └── 05_relationships.js
-├── docs/
-│   └── architecture.md
-├── src/
-│   ├── main/java/br/com/logi_track/aplicacao_api/
-│   │   ├── models/          (entidades — a preencher)
-│   │   ├── repositories/    (persistência — a preencher)
-│   │   ├── services/        (regras — a preencher)
-│   │   ├── controllers/     (API REST — a preencher)
-│   │   ├── exception/       (erros HTTP — a preencher)
-│   │   └── AplicacaoApiApplication.java
-│   └── main/resources/application.properties
-├── pom.xml
-├── .gitignore
-└── README.md
+Pedido → Centro de distribuição → Veículo → Motorista → Rota → Eventos → Entrega
 ```
 
-As pastas de código já existem. Cada pessoa coloca as classes na pasta da camada dela; o projeto Maven já sobe com a configuração atual.
+## Objetivo
 
-
-## Evolução do projeto
-
-1. **Modelagem** — 14 entidades do domínio; 10 viram collection; Volume, Pagamento, Rota e Endereço ficam incorporados. Detalhes em [`modeling/entities.md`](modeling/entities.md) e [`modeling/relationships.md`](modeling/relationships.md).
-2. **Scripts MongoDB** — criação do banco `logitrack`, validators, inserts de exemplo, consultas e percurso de relacionamentos em `mongodb/`.
-3. **API Spring Boot** — as mesmas decisões de modelagem viram classes Java, repositories, regras de negócio e endpoints REST.
+Transformar a modelagem das atividades anteriores em uma aplicação Java funcional (Spring Boot + MongoDB), mantendo a coerência entre entidades, relacionamentos e regras de negócio.
 
 ## Tecnologias
 
-- MongoDB
-- mongosh
 - Java 25
 - Spring Boot 4.1.2
 - Spring Data MongoDB
 - Spring Web
+- MongoDB / mongosh
 - Maven
 
-## Dados no MongoDB
+## Estrutura do repositório
 
-### Collections
+```text
+nosql-LogiTrack/
+├── modeling/          # entidades e relacionamentos (Atividade 3)
+├── mongodb/           # scripts do banco (criar, inserir, consultar)
+├── docs/              # arquitetura, API e decisões de implementação
+├── src/main/java/...  # models, repositories, services, controllers, exception
+├── src/test/java/...  # testes das regras de negócio
+├── pom.xml
+└── README.md
+```
 
-`clientes`, `pedidos`, `produtos`, `entregas`, `centrosDistribuicao`, `motoristas`, `veiculos`, `transportadoras`, `ocorrencias`, `rastreamentos`
+Detalhes da modelagem: [`modeling/entities.md`](modeling/entities.md) e [`modeling/relationships.md`](modeling/relationships.md).
 
-### Documentos incorporados (embedded)
+## Como subir o MongoDB
 
-Endereço, Volume, Pagamento, Dimensões, Rota, horários das etapas, rastreio atual — guardados **dentro** do documento pai.
-
-### Referências
-
-Campos `idCliente`, `idProduto`, `idPedido`, `idMotorista`, `idVeiculo`, `idTransportadora`, `idCentroDistribuicao`, `idEntrega`, etc. A integridade referencial é tratada na aplicação (services), não automaticamente pelo MongoDB.
-
-## Como preparar o banco (scripts)
-
-Com o MongoDB rodando e o `mongosh` instalado, na raiz do repositório:
+Com o MongoDB rodando, na raiz do projeto:
 
 ```text
 mongosh mongodb/01_database.js
@@ -118,16 +60,16 @@ mongosh mongodb/04_queries.js
 mongosh mongodb/05_relationships.js
 ```
 
-A ordem importa: o primeiro recria o banco `logitrack`; o segundo cria as collections; o terceiro insere exemplos; os dois últimos consultam.
+O script `01` recria o banco `logitrack`. Depois cria as collections, insere exemplos e roda as consultas.
 
-## Como rodar a API (Spring Boot)
+## Como rodar a aplicação
 
-1. IntelliJ → **File → Open** → pasta deste repositório (`nosql-LogiTrack`).
-2. Aguarde o Maven baixar as dependências.
-3. MongoDB local na porta `27017` (banco `logitrack`).
-4. (Opcional) rode os scripts `01`–`03` acima para ter dados de exemplo.
-5. Execute `AplicacaoApiApplication`.
-6. API em `http://localhost:8080`.
+1. Abrir a pasta do projeto no IntelliJ (`File → Open`)
+2. Esperar o Maven baixar as dependências
+3. Ter o MongoDB local na porta `27017` (banco `logitrack`)
+4. (Opcional) rodar os scripts `01` a `03` para ter dados de exemplo
+5. Executar a classe `AplicacaoApiApplication`
+6. A API sobe em `http://localhost:8080`
 
 Configuração em `src/main/resources/application.properties`:
 
@@ -137,40 +79,55 @@ spring.mongodb.port=27017
 spring.mongodb.database=logitrack
 ```
 
-Não publique senhas ou credenciais no repositório.
+Não colocar senha ou credencial no repositório.
 
-## API REST (visão geral)
+## Entidades e modelagem
 
-CRUD completo para:
+Temos **10 collections**:
 
-| Recurso | Base |
-| --- | --- |
-| Clientes | `/api/clientes` |
-| Pedidos | `/api/pedidos` |
-| Entregas | `/api/entregas` |
+`clientes`, `pedidos`, `produtos`, `entregas`, `centrosDistribuicao`, `motoristas`, `veiculos`, `transportadoras`, `ocorrencias`, `rastreamentos`
 
-Operações: criar (POST), listar (GET), buscar por id (GET), atualizar (PUT), excluir (DELETE).
+**Embedded (dentro do documento pai):** Endereco, Volume, Pagamento, Dimensoes, Rota, HorariosEtapas, RastreioAtual.
 
-Extras úteis:
+**References (id em outra collection):** `idCliente`, `idProduto`, `idPedido`, `idMotorista`, `idVeiculo`, `idTransportadora`, `idCentroDistribuicao`, `idEntrega`, etc.
+
+Como o MongoDB não garante integridade referencial sozinho, a validação fica nos services (por exemplo, não criar entrega com pedido ou motorista que não existe).
+
+## API REST
+
+CRUD completo em três recursos:
+
+| Recurso  | Base             |
+| -------- | ---------------- |
+| Clientes | `/api/clientes`  |
+| Pedidos  | `/api/pedidos`   |
+| Entregas | `/api/entregas`  |
+
+Em cada um: POST (criar), GET (listar / buscar por id), PUT (atualizar), DELETE (excluir).
+
+Alguns endpoints extras que fizemos:
 
 - `GET /api/pedidos/{id}/com-cliente`
 - `GET /api/entregas/{id}/relacionados`
 - `GET /api/entregas?atrasadas=true`
 - `GET /api/pedidos?idCliente=...`
 
-Exemplos de body e códigos HTTP: [`docs/api.md`](docs/api.md).
+Exemplos de request/response e códigos HTTP estão em [`docs/api.md`](docs/api.md).
 
-## Regras de negócio (aplicação)
+Dá para testar no Postman ou no Insomnia usando esses exemplos.
 
-1. Não cadastrar cliente com e-mail duplicado (409).
-2. Não cadastrar pedido sem volumes (400).
-3. Não criar entrega com pedido ou motorista inexistente (400).
+## Regras de negócio
+
+1. Não cadastrar cliente com e-mail duplicado → **409**
+2. Não cadastrar pedido sem volumes → **400**
+3. Não criar entrega se o pedido ou o motorista não existir → **400**
+
+Mais detalhes sobre integridade e decisões: [`docs/implementation.md`](docs/implementation.md).
 
 ## Documentação
 
-| Arquivo | Conteúdo |
-| --- | --- |
-| [`modeling/entities.md`](modeling/entities.md) | Entidades, atributos e responsabilidade no domínio |
-| [`modeling/relationships.md`](modeling/relationships.md) | Cardinalidade, embed × reference e justificativas |
-| [`docs/architecture.md`](docs/architecture.md) | Camadas da aplicação e pacotes Java |
-| `docs/implementation.md` / `docs/api.md` | Entrarão com a implementação da API (regras, endpoints e exemplos) |
+- [`docs/architecture.md`](docs/architecture.md) — camadas e pacotes
+- [`docs/implementation.md`](docs/implementation.md) — decisões da implementação
+- [`docs/api.md`](docs/api.md) — endpoints e exemplos
+- [`modeling/entities.md`](modeling/entities.md) — entidades
+- [`modeling/relationships.md`](modeling/relationships.md) — embed vs reference
