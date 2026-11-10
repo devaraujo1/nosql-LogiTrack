@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.logi_track.aplicacao_api.models.Cliente;
 import br.com.logi_track.aplicacao_api.services.ClienteService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -27,7 +28,7 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Cliente> criar(@RequestBody Cliente cliente) {
+	public ResponseEntity<Cliente> criar(@Valid @RequestBody Cliente cliente) {
 		Cliente criado = clienteService.criar(cliente);
 		return ResponseEntity.status(HttpStatus.CREATED).body(criado);
 	}
@@ -43,7 +44,7 @@ public class ClienteController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Cliente> atualizar(@PathVariable String id, @RequestBody Cliente cliente) {
+	public ResponseEntity<Cliente> atualizar(@PathVariable String id, @Valid @RequestBody Cliente cliente) {
 		return ResponseEntity.ok(clienteService.atualizar(id, cliente));
 	}
 

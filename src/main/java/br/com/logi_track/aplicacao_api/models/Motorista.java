@@ -3,6 +3,7 @@ package br.com.logi_track.aplicacao_api.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 @Document(collection = "motoristas")
 public class Motorista {
@@ -10,7 +11,7 @@ public class Motorista {
 	@Id
 	private String id;
 
-	@Field("idTransportadora")
+	@Field(name = "idTransportadora", targetType = FieldType.OBJECT_ID)
 	private String idTransportadora;
 
 	@Field("nome")

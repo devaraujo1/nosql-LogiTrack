@@ -4,7 +4,16 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Document(collection = "entregas")
 public class Entrega {
@@ -12,19 +21,28 @@ public class Entrega {
 	@Id
 	private String id;
 
-	@Field("idPedido")
-	private String idPedido;
+	@DocumentReference
+	@Field(name = "idPedido", targetType = FieldType.OBJECT_ID)
+	@NotNull
+	@JsonIgnore
+	private Pedido pedido;
 
-	@Field("idTransportadora")
+	@Field(name = "idTransportadora", targetType = FieldType.OBJECT_ID)
+	@NotBlank
 	private String idTransportadora;
 
-	@Field("idMotorista")
-	private String idMotorista;
+	@DocumentReference
+	@Field(name = "idMotorista", targetType = FieldType.OBJECT_ID)
+	@NotNull
+	@JsonIgnore
+	private Motorista motorista;
 
-	@Field("idVeiculo")
+	@Field(name = "idVeiculo", targetType = FieldType.OBJECT_ID)
+	@NotBlank
 	private String idVeiculo;
 
-	@Field("idCentroDistribuicao")
+	@Field(name = "idCentroDistribuicao", targetType = FieldType.OBJECT_ID)
+	@NotBlank
 	private String idCentroDistribuicao;
 
 	@Field("situacao")
@@ -37,15 +55,21 @@ public class Entrega {
 	private LocalDateTime prometidoPara;
 
 	@Field("destino")
+	@NotNull
+	@Valid
 	private Endereco destino;
 
 	@Field("rota")
+	@NotNull
+	@Valid
 	private Rota rota;
 
 	@Field("horariosEtapas")
+	@Valid
 	private HorariosEtapas horariosEtapas;
 
 	@Field("rastreioAtual")
+	@Valid
 	private RastreioAtual rastreioAtual;
 
 	@Field("criadoEm")
@@ -65,12 +89,28 @@ public class Entrega {
 		this.id = id;
 	}
 
-	public String getIdPedido() {
-		return idPedido;
+	public Pedido getPedido() {
+		return pedido;
 	}
 
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
+
+	@JsonProperty("idPedido")
+	public String getIdPedido() {
+		return pedido != null ? pedido.getId() : null;
+	}
+
+	@JsonProperty("idPedido")
 	public void setIdPedido(String idPedido) {
-		this.idPedido = idPedido;
+		if (idPedido == null || idPedido.isBlank()) {
+			this.pedido = null;
+			return;
+		}
+		Pedido ref = new Pedido();
+		ref.setId(idPedido);
+		this.pedido = ref;
 	}
 
 	public String getIdTransportadora() {
@@ -81,12 +121,28 @@ public class Entrega {
 		this.idTransportadora = idTransportadora;
 	}
 
-	public String getIdMotorista() {
-		return idMotorista;
+	public Motorista getMotorista() {
+		return motorista;
 	}
 
+	public void setMotorista(Motorista motorista) {
+		this.motorista = motorista;
+	}
+
+	@JsonProperty("idMotorista")
+	public String getIdMotorista() {
+		return motorista != null ? motorista.getId() : null;
+	}
+
+	@JsonProperty("idMotorista")
 	public void setIdMotorista(String idMotorista) {
-		this.idMotorista = idMotorista;
+		if (idMotorista == null || idMotorista.isBlank()) {
+			this.motorista = null;
+			return;
+		}
+		Motorista ref = new Motorista();
+		ref.setId(idMotorista);
+		this.motorista = ref;
 	}
 
 	public String getIdVeiculo() {

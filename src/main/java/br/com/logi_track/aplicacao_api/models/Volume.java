@@ -1,12 +1,32 @@
 package br.com.logi_track.aplicacao_api.models;
 
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Volume {
 
+	@NotBlank
 	private String codigo;
+
+	@Field(targetType = FieldType.OBJECT_ID)
+	@NotBlank
 	private String idProduto;
+
+	@NotBlank
 	private String nomeProduto;
+
+	@NotNull
 	private Double pesoKg;
+
+	@NotNull
+	@Valid
 	private Dimensoes dimensoes;
+
+	@NotNull
 	private Integer quantidade;
 
 	public Volume() {

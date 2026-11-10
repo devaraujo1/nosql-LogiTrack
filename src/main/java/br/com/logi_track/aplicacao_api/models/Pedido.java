@@ -5,7 +5,16 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Document(collection = "pedidos")
 public class Pedido {
@@ -13,22 +22,34 @@ public class Pedido {
 	@Id
 	private String id;
 
-	@Field("idCliente")
-	private String idCliente;
+	// referencia para o cliente (DocumentReference)
+	@DocumentReference
+	@Field(name = "idCliente", targetType = FieldType.OBJECT_ID)
+	@NotNull
+	@JsonIgnore
+	private Cliente cliente;
 
 	@Field("situacao")
 	private String situacao;
 
 	@Field("origem")
+	@NotNull
+	@Valid
 	private Endereco origem;
 
 	@Field("destino")
+	@NotNull
+	@Valid
 	private Endereco destino;
 
 	@Field("volumes")
+	@NotEmpty
+	@Valid
 	private List<Volume> volumes;
 
 	@Field("pagamento")
+	@NotNull
+	@Valid
 	private Pagamento pagamento;
 
 	@Field("criadoEm")
@@ -48,12 +69,28 @@ public class Pedido {
 		this.id = id;
 	}
 
-	public String getIdCliente() {
-		return idCliente;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	@JsonProperty("idCliente")
+	public String getIdCliente() {
+		return cliente != null ? cliente.getId() : null;
+	}
+
+	@JsonProperty("idCliente")
 	public void setIdCliente(String idCliente) {
-		this.idCliente = idCliente;
+		if (idCliente == null || idCliente.isBlank()) {
+			this.cliente = null;
+			return;
+		}
+		Cliente ref = new Cliente();
+		ref.setId(idCliente);
+		this.cliente = ref;
 	}
 
 	public String getSituacao() {

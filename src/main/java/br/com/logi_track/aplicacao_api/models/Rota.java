@@ -1,9 +1,15 @@
 package br.com.logi_track.aplicacao_api.models;
 
+import jakarta.validation.constraints.NotNull;
+
 public class Rota {
 
+	@NotNull
 	private Double distanciaKm;
+
+	@NotNull
 	private Integer duracaoPrevistaMin;
+
 	private Integer duracaoRealMin;
 
 	public Rota() {

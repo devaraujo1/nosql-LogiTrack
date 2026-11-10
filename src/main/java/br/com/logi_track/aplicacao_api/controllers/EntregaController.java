@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.logi_track.aplicacao_api.models.Entrega;
 import br.com.logi_track.aplicacao_api.services.EntregaService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/entregas")
@@ -29,7 +30,7 @@ public class EntregaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Entrega> criar(@RequestBody Entrega entrega) {
+	public ResponseEntity<Entrega> criar(@Valid @RequestBody Entrega entrega) {
 		Entrega criada = entregaService.criar(entrega);
 		return ResponseEntity.status(HttpStatus.CREATED).body(criada);
 	}
@@ -58,7 +59,7 @@ public class EntregaController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Entrega> atualizar(@PathVariable String id, @RequestBody Entrega entrega) {
+	public ResponseEntity<Entrega> atualizar(@PathVariable String id, @Valid @RequestBody Entrega entrega) {
 		return ResponseEntity.ok(entregaService.atualizar(id, entrega));
 	}
 

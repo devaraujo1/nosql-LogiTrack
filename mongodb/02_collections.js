@@ -19,9 +19,9 @@ const dimensoes = {
   bsonType: "object",
   required: ["comprimentoCm", "larguraCm", "alturaCm"],
   properties: {
-    comprimentoCm: { bsonType: "double" },
-    larguraCm: { bsonType: "double" },
-    alturaCm: { bsonType: "double" }
+    comprimentoCm: { bsonType: ["double", "int", "long", "decimal"] },
+    larguraCm: { bsonType: ["double", "int", "long", "decimal"] },
+    alturaCm: { bsonType: ["double", "int", "long", "decimal"] }
   }
 };
 
@@ -96,8 +96,12 @@ criar("veiculos", ["idTransportadora", "placa", "tipo", "capacidadeKg", "situaca
   situacao: { enum: ["disponivel", "em_uso", "manutencao"] }
 });
 
+// refs: ObjectId nos scripts; string tambem porque o Java manda string as vezes
+const refId = { bsonType: ["objectId", "string"] };
+const numeroFlex = { bsonType: ["double", "int", "long", "decimal"] };
+
 criar("pedidos", ["idCliente", "situacao", "origem", "destino", "volumes", "pagamento", "criadoEm", "atualizadoEm"], {
-  idCliente: { bsonType: "objectId" },
+  idCliente: refId,
   situacao: { enum: ["criado", "pago", "em_transito", "entregue", "cancelado"] },
   origem: endereco,
   destino: endereco,
@@ -108,11 +112,11 @@ criar("pedidos", ["idCliente", "situacao", "origem", "destino", "volumes", "paga
       required: ["codigo", "idProduto", "nomeProduto", "pesoKg", "dimensoes", "quantidade"],
       properties: {
         codigo: { bsonType: "string" },
-        idProduto: { bsonType: "objectId" },
+        idProduto: refId,
         nomeProduto: { bsonType: "string" },
-        pesoKg: { bsonType: "double" },
+        pesoKg: numeroFlex,
         dimensoes: dimensoes,
-        quantidade: { bsonType: "int" }
+        quantidade: { bsonType: ["int", "long", "double"] }
       }
     }
   },
@@ -121,7 +125,7 @@ criar("pedidos", ["idCliente", "situacao", "origem", "destino", "volumes", "paga
     required: ["forma", "valor", "situacao"],
     properties: {
       forma: { enum: ["pix", "boleto", "cartao"] },
-      valor: { bsonType: "decimal" },
+      valor: { bsonType: ["decimal", "double", "int", "long"] },
       situacao: { enum: ["pendente", "pago"] },
       pagoEm: { bsonType: "date" }
     }
@@ -131,39 +135,39 @@ criar("pedidos", ["idCliente", "situacao", "origem", "destino", "volumes", "paga
 });
 
 criar("entregas", ["idPedido", "idTransportadora", "idMotorista", "idVeiculo", "idCentroDistribuicao", "situacao", "atrasado", "prometidoPara", "destino", "rota", "horariosEtapas", "rastreioAtual", "criadoEm", "atualizadoEm"], {
-  idPedido: { bsonType: "objectId" },
-  idTransportadora: { bsonType: "objectId" },
-  idMotorista: { bsonType: "objectId" },
-  idVeiculo: { bsonType: "objectId" },
-  idCentroDistribuicao: { bsonType: "objectId" },
+  idPedido: refId,
+  idTransportadora: refId,
+  idMotorista: refId,
+  idVeiculo: refId,
+  idCentroDistribuicao: refId,
   situacao: { enum: ["no_cd", "em_transito", "entregue", "falhou"] },
   atrasado: { bsonType: "bool" },
   prometidoPara: { bsonType: "date" },
   destino: endereco,
   rota: {
     bsonType: "object",
-    required: ["distanciaKm", "duracaoPrevistaMin", "duracaoRealMin"],
+    required: ["distanciaKm", "duracaoPrevistaMin"],
     properties: {
-      distanciaKm: { bsonType: "double" },
-      duracaoPrevistaMin: { bsonType: "int" },
-      duracaoRealMin: { bsonType: "int" }
+      distanciaKm: numeroFlex,
+      duracaoPrevistaMin: { bsonType: ["int", "long", "double"] },
+      duracaoRealMin: { bsonType: ["int", "long", "double", "null"] }
     }
   },
   horariosEtapas: {
     bsonType: "object",
     properties: {
-      recebidoNoCdEm: { bsonType: "date" },
-      saiuEm: { bsonType: "date" },
-      chegouEm: { bsonType: "date" },
-      entregueEm: { bsonType: "date" }
+      recebidoNoCdEm: { bsonType: ["date", "null"] },
+      saiuEm: { bsonType: ["date", "null"] },
+      chegouEm: { bsonType: ["date", "null"] },
+      entregueEm: { bsonType: ["date", "null"] }
     }
   },
   rastreioAtual: {
     bsonType: "object",
     required: ["latitude", "longitude", "cidade", "estado", "registradoEm"],
     properties: {
-      latitude: { bsonType: "double" },
-      longitude: { bsonType: "double" },
+      latitude: numeroFlex,
+      longitude: numeroFlex,
       cidade: { bsonType: "string" },
       estado: { bsonType: "string" },
       registradoEm: { bsonType: "date" }

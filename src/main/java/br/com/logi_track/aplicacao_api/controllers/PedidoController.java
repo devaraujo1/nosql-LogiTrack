@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.logi_track.aplicacao_api.models.Pedido;
 import br.com.logi_track.aplicacao_api.services.PedidoService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -29,7 +30,7 @@ public class PedidoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Pedido> criar(@RequestBody Pedido pedido) {
+	public ResponseEntity<Pedido> criar(@Valid @RequestBody Pedido pedido) {
 		Pedido criado = pedidoService.criar(pedido);
 		return ResponseEntity.status(HttpStatus.CREATED).body(criado);
 	}
@@ -53,7 +54,7 @@ public class PedidoController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Pedido> atualizar(@PathVariable String id, @RequestBody Pedido pedido) {
+	public ResponseEntity<Pedido> atualizar(@PathVariable String id, @Valid @RequestBody Pedido pedido) {
 		return ResponseEntity.ok(pedidoService.atualizar(id, pedido));
 	}
 
