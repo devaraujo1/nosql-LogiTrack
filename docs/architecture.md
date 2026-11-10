@@ -24,6 +24,8 @@ Pacote base: `br.com.logi_track.aplicacao_api`
 
 As pastas já estão criadas no projeto. A classe principal é `AplicacaoApiApplication`.
 
+Cada pasta da API fica com a responsabilidade dela (models, repositories, services, controllers e exception).
+
 ## Banco
 
 - Host: `localhost`
