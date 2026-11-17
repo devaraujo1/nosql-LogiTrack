@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
-// tira o _class que o Spring coloca e que o validator do Mongo rejeita
 @Configuration
 public class MongoConfig {
 

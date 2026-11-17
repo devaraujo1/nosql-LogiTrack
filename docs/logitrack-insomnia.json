@@ -1,14 +1,14 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-11-10T19:30:00.000Z",
+  "__export_date": "2026-11-17T01:21:51.000Z",
   "__export_source": "insomnia.desktop.app:v13.4.0",
   "resources": [
     {
       "_id": "wrk_logitrack",
       "_type": "workspace",
       "name": "LogiTrack API",
-      "description": "Testes da API",
+      "description": "CRUD + CORE reserva/estoque",
       "scope": "collection"
     },
     {
@@ -25,145 +25,1103 @@
         "motoristaId": "64f300000000000000000001",
         "veiculoId": "64f400000000000000000001",
         "transportadoraId": "64f100000000000000000001",
-        "centroId": "64f200000000000000000001"
+        "centroId": "64f200000000000000000001",
+        "clienteDemoId": "",
+        "pedidoDemoId": "",
+        "entregaDemoId": "",
+        "pedidoAuxId": "",
+        "entregaAuxId": ""
       },
       "dataPropertyOrder": {
-        "&": ["baseUrl", "clienteId", "produtoId", "pedidoId", "entregaId", "motoristaId", "veiculoId", "transportadoraId", "centroId"]
+        "&": [
+          "baseUrl",
+          "clienteId",
+          "produtoId",
+          "pedidoId",
+          "entregaId",
+          "motoristaId",
+          "veiculoId",
+          "transportadoraId",
+          "centroId",
+          "clienteDemoId",
+          "pedidoDemoId",
+          "entregaDemoId",
+          "pedidoAuxId",
+          "entregaAuxId"
+        ]
       },
       "color": null,
       "isPrivate": false,
       "metaSortKey": 1
     },
-    { "_id": "fld_clientes", "_type": "request_group", "parentId": "wrk_logitrack", "name": "Clientes", "environment": {}, "environmentPropertyOrder": null, "metaSortKey": -3 },
-    { "_id": "fld_pedidos", "_type": "request_group", "parentId": "wrk_logitrack", "name": "Pedidos", "environment": {}, "environmentPropertyOrder": null, "metaSortKey": -2 },
-    { "_id": "fld_entregas", "_type": "request_group", "parentId": "wrk_logitrack", "name": "Entregas", "environment": {}, "environmentPropertyOrder": null, "metaSortKey": -1 },
-
-    { "_id": "req_cli_list", "_type": "request", "parentId": "fld_clientes", "name": "Listar clientes", "method": "GET", "url": "{{ _.baseUrl }}/api/clientes", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -100, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-    { "_id": "req_cli_get", "_type": "request", "parentId": "fld_clientes", "name": "Buscar cliente", "method": "GET", "url": "{{ _.baseUrl }}/api/clientes/{{ _.clienteId }}", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -90, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
     {
-      "_id": "req_cli_post",
+      "_id": "fld_a",
+      "_type": "request_group",
+      "parentId": "wrk_logitrack",
+      "name": "A - Clientes",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -100
+    },
+    {
+      "_id": "fld_b",
+      "_type": "request_group",
+      "parentId": "wrk_logitrack",
+      "name": "B - Pedidos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -90
+    },
+    {
+      "_id": "fld_c",
+      "_type": "request_group",
+      "parentId": "wrk_logitrack",
+      "name": "C - Entregas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -80
+    },
+    {
+      "_id": "fld_d",
+      "_type": "request_group",
+      "parentId": "wrk_logitrack",
+      "name": "D - Produtos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -70
+    },
+    {
+      "_id": "fld_e",
+      "_type": "request_group",
+      "parentId": "wrk_logitrack",
+      "name": "E - CORE",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -60
+    },
+    {
+      "_id": "a1",
       "_type": "request",
-      "parentId": "fld_clientes",
-      "name": "Criar cliente",
+      "parentId": "fld_a",
+      "name": "A1 GET listar",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/clientes",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "a2",
+      "_type": "request",
+      "parentId": "fld_a",
+      "name": "A2 GET por id",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/clientes/{{ _.clienteId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -990,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "a3",
+      "_type": "request",
+      "parentId": "fld_a",
+      "name": "A3 GET id inexistente",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/clientes/000000000000000000000000",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -980,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "a4",
+      "_type": "request",
+      "parentId": "fld_a",
+      "name": "A4 POST criar",
       "method": "POST",
       "url": "{{ _.baseUrl }}/api/clientes",
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"nome\": \"Ana Teste\",\n  \"tipo\": \"PF\",\n  \"documento\": \"111.222.333-44\",\n  \"email\": \"ana.teste@email.com\",\n  \"telefone\": \"75911112222\",\n  \"endereco\": {\n    \"rua\": \"Rua Teste\",\n    \"numero\": \"10\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  }\n}"
-      },
       "parameters": [],
-      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "authentication": {},
-      "metaSortKey": -80,
+      "metaSortKey": -970,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
       "settingRebuildPath": true,
-      "settingFollowRedirects": "global"
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Ana Teste\",\n  \"tipo\": \"PF\",\n  \"documento\": \"111.222.333-44\",\n  \"email\": \"ana.teste@email.com\",\n  \"telefone\": \"75911112222\",\n  \"endereco\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  }\n}"
+      }
     },
     {
-      "_id": "req_cli_put",
+      "_id": "a5",
       "_type": "request",
-      "parentId": "fld_clientes",
-      "name": "Atualizar cliente",
+      "parentId": "fld_a",
+      "name": "A5 POST e-mail duplicado",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/clientes",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -960,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Outro\",\n  \"tipo\": \"PF\",\n  \"documento\": \"111.222.333-44\",\n  \"email\": \"maria@email.com\",\n  \"telefone\": \"75911112222\",\n  \"endereco\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "a6",
+      "_type": "request",
+      "parentId": "fld_a",
+      "name": "A6 PUT atualizar",
       "method": "PUT",
-      "url": "{{ _.baseUrl }}/api/clientes/{{ _.clienteId }}",
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"nome\": \"Maria Silva\",\n  \"tipo\": \"PF\",\n  \"documento\": \"123.456.789-00\",\n  \"email\": \"maria@email.com\",\n  \"telefone\": \"75999990000\",\n  \"endereco\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  }\n}"
-      },
+      "url": "{{ _.baseUrl }}/api/clientes/{{ _.clienteDemoId }}",
       "parameters": [],
-      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "authentication": {},
-      "metaSortKey": -70,
+      "metaSortKey": -950,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
       "settingRebuildPath": true,
-      "settingFollowRedirects": "global"
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Ana Teste\",\n  \"tipo\": \"PF\",\n  \"documento\": \"111.222.333-44\",\n  \"email\": \"ana.teste@email.com\",\n  \"telefone\": \"75911112222\",\n  \"endereco\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  }\n}"
+      }
     },
-    { "_id": "req_cli_del", "_type": "request", "parentId": "fld_clientes", "name": "Excluir cliente", "method": "DELETE", "url": "{{ _.baseUrl }}/api/clientes/{{ _.clienteId }}", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -60, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-
-    { "_id": "req_ped_list", "_type": "request", "parentId": "fld_pedidos", "name": "Listar pedidos", "method": "GET", "url": "{{ _.baseUrl }}/api/pedidos", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -50, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-    { "_id": "req_ped_get", "_type": "request", "parentId": "fld_pedidos", "name": "Buscar pedido", "method": "GET", "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoId }}", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -45, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-    { "_id": "req_ped_com", "_type": "request", "parentId": "fld_pedidos", "name": "Pedido com cliente", "method": "GET", "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoId }}/com-cliente", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -40, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
     {
-      "_id": "req_ped_post",
+      "_id": "a7",
       "_type": "request",
-      "parentId": "fld_pedidos",
-      "name": "Criar pedido",
+      "parentId": "fld_a",
+      "name": "A7 DELETE",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/api/clientes/{{ _.clienteDemoId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -940,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "b1",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B1 GET listar",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/pedidos",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -900,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "b2",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B2 GET por cliente",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/pedidos?idCliente={{ _.clienteId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -890,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "b3",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B3 GET por id (seed)",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -880,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "b4",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B4 GET com-cliente",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoId }}/com-cliente",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -870,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "b5",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B5 GET inexistente",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/pedidos/000000000000000000000000",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -860,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "b6",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B6 POST criar OK",
       "method": "POST",
       "url": "{{ _.baseUrl }}/api/pedidos",
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua B\",\n    \"numero\": \"50\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Av. C\",\n    \"numero\": \"200\",\n    \"complemento\": \"Apto 1\",\n    \"bairro\": \"Pituba\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"41810-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [\n    {\n      \"codigo\": \"VOL-2001\",\n      \"idProduto\": \"{{ _.produtoId }}\",\n      \"nomeProduto\": \"Notebook\",\n      \"pesoKg\": 2.1,\n      \"dimensoes\": { \"comprimentoCm\": 40.0, \"larguraCm\": 30.0, \"alturaCm\": 10.0 },\n      \"quantidade\": 1\n    }\n  ],\n  \"pagamento\": { \"forma\": \"pix\", \"valor\": 59.90, \"situacao\": \"pendente\" }\n}"
-      },
       "parameters": [],
-      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "authentication": {},
-      "metaSortKey": -35,
+      "metaSortKey": -850,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
       "settingRebuildPath": true,
-      "settingFollowRedirects": "global"
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [\n    {\n      \"codigo\": \"VOL-B6\",\n      \"idProduto\": \"{{ _.produtoId }}\",\n      \"nomeProduto\": \"Notebook\",\n      \"pesoKg\": 2.1,\n      \"dimensoes\": {\n        \"comprimentoCm\": 40.0,\n        \"larguraCm\": 30.0,\n        \"alturaCm\": 10.0\n      },\n      \"quantidade\": 1\n    }\n  ],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 59.9,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
     },
-    { "_id": "req_ped_del", "_type": "request", "parentId": "fld_pedidos", "name": "Excluir pedido", "method": "DELETE", "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoId }}", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -30, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-
-    { "_id": "req_ent_list", "_type": "request", "parentId": "fld_entregas", "name": "Listar entregas", "method": "GET", "url": "{{ _.baseUrl }}/api/entregas", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -20, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-    { "_id": "req_ent_atr", "_type": "request", "parentId": "fld_entregas", "name": "Entregas atrasadas", "method": "GET", "url": "{{ _.baseUrl }}/api/entregas?atrasadas=true", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -15, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
-    { "_id": "req_ent_rel", "_type": "request", "parentId": "fld_entregas", "name": "Entrega com relacionados", "method": "GET", "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaId }}/relacionados", "body": {}, "parameters": [], "headers": [], "authentication": {}, "metaSortKey": -10, "isPrivate": false, "settingStoreCookies": true, "settingSendCookies": true, "settingDisableRenderRequestBody": false, "settingEncodeUrl": true, "settingRebuildPath": true, "settingFollowRedirects": "global" },
     {
-      "_id": "req_ent_post",
+      "_id": "b7",
       "_type": "request",
-      "parentId": "fld_entregas",
-      "name": "Criar entrega",
+      "parentId": "fld_b",
+      "name": "B7 POST sem volumes",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/pedidos",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -840,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 10,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "b8",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B8 POST estoque insuficiente",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/pedidos",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -830,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [\n    {\n      \"codigo\": \"VOL-B8\",\n      \"idProduto\": \"{{ _.produtoId }}\",\n      \"nomeProduto\": \"Notebook\",\n      \"pesoKg\": 2.1,\n      \"dimensoes\": {\n        \"comprimentoCm\": 40.0,\n        \"larguraCm\": 30.0,\n        \"alturaCm\": 10.0\n      },\n      \"quantidade\": 999\n    }\n  ],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 59.9,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "b9",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B9 PUT atualizar",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoDemoId }}",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -820,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [\n    {\n      \"codigo\": \"VOL-B9\",\n      \"idProduto\": \"{{ _.produtoId }}\",\n      \"nomeProduto\": \"Notebook\",\n      \"pesoKg\": 2.1,\n      \"dimensoes\": {\n        \"comprimentoCm\": 40.0,\n        \"larguraCm\": 30.0,\n        \"alturaCm\": 10.0\n      },\n      \"quantidade\": 1\n    }\n  ],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 59.9,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "b10",
+      "_type": "request",
+      "parentId": "fld_b",
+      "name": "B10 DELETE",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/api/pedidos/{{ _.pedidoAuxId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -810,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c1",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C1 GET listar",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -800,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c2",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C2 GET atrasadas",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas?atrasadas=true",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -790,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c3",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C3 GET por motorista",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas?idMotorista={{ _.motoristaId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -780,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c4",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C4 GET por id (seed)",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -770,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c5",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C5 GET relacionados",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaId }}/relacionados",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -760,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c6",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C6 GET inexistente",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas/000000000000000000000000",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -750,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "c7",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C7 POST criar no_cd",
       "method": "POST",
       "url": "{{ _.baseUrl }}/api/entregas",
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"idPedido\": \"{{ _.pedidoId }}\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"no_cd\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": { \"distanciaKm\": 110.0, \"duracaoPrevistaMin\": 130 },\n  \"horariosEtapas\": { \"recebidoNoCdEm\": \"2026-11-10T09:00:00\" },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
-      },
       "parameters": [],
-      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "authentication": {},
-      "metaSortKey": -5,
+      "metaSortKey": -740,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
       "settingRebuildPath": true,
-      "settingFollowRedirects": "global"
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idPedido\": \"{{ _.pedidoDemoId }}\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"no_cd\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": {\n    \"distanciaKm\": 110.0,\n    \"duracaoPrevistaMin\": 130\n  },\n  \"horariosEtapas\": {\n    \"recebidoNoCdEm\": \"2026-11-10T09:00:00\"\n  },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
+      }
     },
     {
-      "_id": "req_cli_dup",
+      "_id": "c8",
       "_type": "request",
-      "parentId": "fld_clientes",
-      "name": "Cliente e-mail duplicado",
+      "parentId": "fld_c",
+      "name": "C8 POST ref inexistente",
       "method": "POST",
-      "url": "{{ _.baseUrl }}/api/clientes",
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"nome\": \"Outro\",\n  \"tipo\": \"PF\",\n  \"documento\": \"000.000.000-00\",\n  \"email\": \"maria@email.com\",\n  \"telefone\": \"75900000000\",\n  \"endereco\": {\n    \"rua\": \"Rua X\",\n    \"numero\": \"1\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  }\n}"
-      },
+      "url": "{{ _.baseUrl }}/api/entregas",
       "parameters": [],
-      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "authentication": {},
-      "metaSortKey": -55,
+      "metaSortKey": -730,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
       "settingRebuildPath": true,
-      "settingFollowRedirects": "global"
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idPedido\": \"000000000000000000000000\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"no_cd\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": {\n    \"distanciaKm\": 110.0,\n    \"duracaoPrevistaMin\": 130\n  },\n  \"horariosEtapas\": {\n    \"recebidoNoCdEm\": \"2026-11-10T09:00:00\"\n  },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "c9",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C9 PUT atualizar",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaDemoId }}",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -720,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idPedido\": \"{{ _.pedidoDemoId }}\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"no_cd\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": {\n    \"distanciaKm\": 110.0,\n    \"duracaoPrevistaMin\": 130\n  },\n  \"horariosEtapas\": {\n    \"recebidoNoCdEm\": \"2026-11-10T09:00:00\"\n  },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "c10",
+      "_type": "request",
+      "parentId": "fld_c",
+      "name": "C10 DELETE",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaAuxId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -710,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "d1",
+      "_type": "request",
+      "parentId": "fld_d",
+      "name": "D1 GET listar produtos",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/produtos",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "d2",
+      "_type": "request",
+      "parentId": "fld_d",
+      "name": "D2 GET Notebook",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/produtos/{{ _.produtoId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -690,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "d3",
+      "_type": "request",
+      "parentId": "fld_d",
+      "name": "D3 GET inexistente",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/produtos/000000000000000000000000",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -680,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "d4",
+      "_type": "request",
+      "parentId": "fld_d",
+      "name": "D4 PUT repor estoque",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/produtos/{{ _.produtoId }}",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -670,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantidadeEstoque\": 20\n}"
+      }
+    },
+    {
+      "_id": "e1",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E01 GET produto Notebook",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/produtos/{{ _.produtoId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -600,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "e2",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E02 GET clientes",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/clientes",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -590,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "e3",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E03 POST pedido qtd 2",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/pedidos",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -580,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [\n    {\n      \"codigo\": \"VOL-CORE-2\",\n      \"idProduto\": \"{{ _.produtoId }}\",\n      \"nomeProduto\": \"Notebook\",\n      \"pesoKg\": 2.1,\n      \"dimensoes\": {\n        \"comprimentoCm\": 40.0,\n        \"larguraCm\": 30.0,\n        \"alturaCm\": 10.0\n      },\n      \"quantidade\": 2\n    }\n  ],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 59.9,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "e4",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E04 POST pedido sem volumes",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/pedidos",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -570,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 10,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "e5",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E05 POST pedido estoura disponivel",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/pedidos",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -560,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idCliente\": \"{{ _.clienteId }}\",\n  \"situacao\": \"criado\",\n  \"origem\": {\n    \"rua\": \"Rua A\",\n    \"numero\": \"100\",\n    \"complemento\": \"\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"cep\": \"44000-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"volumes\": [\n    {\n      \"codigo\": \"VOL-CORE-ERR\",\n      \"idProduto\": \"{{ _.produtoId }}\",\n      \"nomeProduto\": \"Notebook\",\n      \"pesoKg\": 2.1,\n      \"dimensoes\": {\n        \"comprimentoCm\": 40.0,\n        \"larguraCm\": 30.0,\n        \"alturaCm\": 10.0\n      },\n      \"quantidade\": 9\n    }\n  ],\n  \"pagamento\": {\n    \"forma\": \"pix\",\n    \"valor\": 59.9,\n    \"situacao\": \"pendente\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "e6",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E06 POST entrega no_cd",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/entregas",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -550,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idPedido\": \"{{ _.pedidoDemoId }}\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"no_cd\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": {\n    \"distanciaKm\": 110.0,\n    \"duracaoPrevistaMin\": 130\n  },\n  \"horariosEtapas\": {\n    \"recebidoNoCdEm\": \"2026-11-10T09:00:00\"\n  },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "e7",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E07 PUT entrega em_transito",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaDemoId }}",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -540,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idPedido\": \"{{ _.pedidoDemoId }}\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"em_transito\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": {\n    \"distanciaKm\": 110.0,\n    \"duracaoPrevistaMin\": 130\n  },\n  \"horariosEtapas\": {\n    \"recebidoNoCdEm\": \"2026-11-10T09:00:00\"\n  },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "e8",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E08 GET entrega relacionados",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaDemoId }}/relacionados",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -530,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "e9",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E09 GET entregas atrasadas",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/entregas?atrasadas=true",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -520,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "e10",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E10 GET produto Notebook",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/produtos/{{ _.produtoId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -510,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "e11",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E11 PUT de novo em_transito",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/entregas/{{ _.entregaDemoId }}",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idPedido\": \"{{ _.pedidoDemoId }}\",\n  \"idTransportadora\": \"{{ _.transportadoraId }}\",\n  \"idMotorista\": \"{{ _.motoristaId }}\",\n  \"idVeiculo\": \"{{ _.veiculoId }}\",\n  \"idCentroDistribuicao\": \"{{ _.centroId }}\",\n  \"situacao\": \"em_transito\",\n  \"atrasado\": false,\n  \"prometidoPara\": \"2026-11-20T18:00:00\",\n  \"destino\": {\n    \"rua\": \"Rua da Graca\",\n    \"numero\": \"200\",\n    \"complemento\": \"\",\n    \"bairro\": \"Graca\",\n    \"cidade\": \"Salvador\",\n    \"estado\": \"BA\",\n    \"cep\": \"40150-000\",\n    \"pais\": \"Brasil\"\n  },\n  \"rota\": {\n    \"distanciaKm\": 110.0,\n    \"duracaoPrevistaMin\": 130\n  },\n  \"horariosEtapas\": {\n    \"recebidoNoCdEm\": \"2026-11-10T09:00:00\"\n  },\n  \"rastreioAtual\": {\n    \"latitude\": -12.26,\n    \"longitude\": -38.96,\n    \"cidade\": \"Feira de Santana\",\n    \"estado\": \"BA\",\n    \"registradoEm\": \"2026-11-10T09:00:00\"\n  }\n}"
+      }
+    },
+    {
+      "_id": "e12",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E12 PUT repor estoque",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/produtos/{{ _.produtoId }}",
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -490,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantidadeEstoque\": 20\n}"
+      }
+    },
+    {
+      "_id": "e13",
+      "_type": "request",
+      "parentId": "fld_e",
+      "name": "E13 GET produto apos repor",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/produtos/{{ _.produtoId }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -480,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
     }
   ]
 }

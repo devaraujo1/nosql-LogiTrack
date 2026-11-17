@@ -223,7 +223,9 @@ banco.produtos.insertMany([
     pesoKg: Double(2.1),
     dimensoes: dimensoes(36, 25, 3),
     fragil: true,
-    ativo: true
+    ativo: true,
+    quantidadeEstoque: NumberInt(8),
+    quantidadeReservada: NumberInt(0)
   },
   {
     _id: idProdutoMouse,
@@ -233,7 +235,9 @@ banco.produtos.insertMany([
     pesoKg: Double(0.12),
     dimensoes: dimensoes(12, 7, 4),
     fragil: false,
-    ativo: true
+    ativo: true,
+    quantidadeEstoque: NumberInt(47),
+    quantidadeReservada: NumberInt(0)
   },
   {
     _id: idProdutoCadeira,
@@ -243,7 +247,9 @@ banco.produtos.insertMany([
     pesoKg: Double(12.5),
     dimensoes: dimensoes(60, 60, 110),
     fragil: false,
-    ativo: true
+    ativo: true,
+    quantidadeEstoque: NumberInt(18),
+    quantidadeReservada: NumberInt(0)
   },
   {
     _id: idProdutoPerfume,
@@ -253,7 +259,9 @@ banco.produtos.insertMany([
     pesoKg: Double(0.4),
     dimensoes: dimensoes(8, 8, 15),
     fragil: true,
-    ativo: true
+    ativo: true,
+    quantidadeEstoque: NumberInt(27),
+    quantidadeReservada: NumberInt(0)
   }
 ]);
 

@@ -73,6 +73,7 @@ CRUD em:
 | Clientes | `/api/clientes`  |
 | Pedidos  | `/api/pedidos`   |
 | Entregas | `/api/entregas`  |
+| Produtos | `/api/produtos` (GET + PUT estoque) |
 
 Extras:
 
@@ -83,13 +84,14 @@ Extras:
 - `GET /api/entregas?idMotorista=...`
 
 Exemplos em [`docs/api.md`](docs/api.md).  
-Collection do Insomnia: [`docs/logitrack-insomnia.json`](docs/logitrack-insomnia.json).
+Insomnia: [`docs/logitrack-insomnia.json`](docs/logitrack-insomnia.json) — como importar: [`docs/insomnia-LEIA-ME.md`](docs/insomnia-LEIA-ME.md).
 
 ## Regras de negócio
 
 1. e-mail duplicado → 409
 2. pedido sem volumes → 400
 3. entrega com pedido/motorista inexistente → 400
+4. estoque com reserva: pedido reserva; `em_transito` baixa físico+reserva; repor só mexe no estoque
 
 Detalhes: [`docs/implementation.md`](docs/implementation.md).
 

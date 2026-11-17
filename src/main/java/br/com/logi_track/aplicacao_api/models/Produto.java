@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "produtos")
 public class Produto {
 
@@ -30,6 +32,12 @@ public class Produto {
 
 	@Field("ativo")
 	private Boolean ativo;
+
+	@Field("quantidadeEstoque")
+	private Integer quantidadeEstoque;
+
+	@Field("quantidadeReservada")
+	private Integer quantidadeReservada;
 
 	public Produto() {
 	}
@@ -96,5 +104,28 @@ public class Produto {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public Integer getQuantidadeEstoque() {
+		return quantidadeEstoque;
+	}
+
+	public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+		this.quantidadeEstoque = quantidadeEstoque;
+	}
+
+	public Integer getQuantidadeReservada() {
+		return quantidadeReservada;
+	}
+
+	public void setQuantidadeReservada(Integer quantidadeReservada) {
+		this.quantidadeReservada = quantidadeReservada;
+	}
+
+	@JsonProperty("quantidadeDisponivel")
+	public Integer getQuantidadeDisponivel() {
+		int estoque = quantidadeEstoque == null ? 0 : quantidadeEstoque;
+		int reservada = quantidadeReservada == null ? 0 : quantidadeReservada;
+		return estoque - reservada;
 	}
 }
