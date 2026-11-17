@@ -44,7 +44,7 @@ Resposta esperada: **201 Created** com o documento incluindo `id`.
 
 ```json
 {
-  "idCliente": "SUBSTITUA_PELO_ID_DO_CLIENTE",
+  "idCliente": "64f500000000000000000001",
   "situacao": "criado",
   "origem": {
     "rua": "Rua B",
@@ -69,7 +69,7 @@ Resposta esperada: **201 Created** com o documento incluindo `id`.
   "volumes": [
     {
       "codigo": "VOL-1001",
-      "idProduto": "SUBSTITUA_PELO_ID_DO_PRODUTO",
+      "idProduto": "64f600000000000000000001",
       "nomeProduto": "Notebook",
       "pesoKg": 2.1,
       "dimensoes": {
@@ -88,7 +88,8 @@ Resposta esperada: **201 Created** com o documento incluindo `id`.
 }
 ```
 
-Pedido sem `volumes` → **400 Bad Request**.
+Pedido sem `volumes` → **400 Bad Request**.  
+Sem disponível (`estoque - reservada`) → **400**; na criação a quantidade vai para `quantidadeReservada`.
 
 ### Com cliente — `GET /api/pedidos/{id}/com-cliente` → **200**
 
@@ -120,8 +121,19 @@ Retorna entrega + pedido + motorista.
 
 - `GET /api/entregas`
 - `GET /api/entregas/{id}`
-- `PUT /api/entregas/{id}`
+- `PUT /api/entregas/{id}` — 1ª ida para `em_transito` baixa `quantidadeEstoque` e `quantidadeReservada`
 - `DELETE /api/entregas/{id}` → **204**
+
+## Produtos
+
+- `GET /api/produtos` → **200**
+- `GET /api/produtos/{id}` → **200** ou **404** (inclui `quantidadeDisponivel`)
+- `PUT /api/produtos/{id}` → repor estoque: body `{ "quantidadeEstoque": 20 }` (não altera reservada)
+
+## Insomnia
+
+Collection pronta: [`logitrack-insomnia.json`](logitrack-insomnia.json).  
+Como importar e ordem da pasta CORE: [`insomnia-LEIA-ME.md`](insomnia-LEIA-ME.md).
 
 ## Códigos HTTP usados
 

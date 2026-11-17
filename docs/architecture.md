@@ -22,9 +22,7 @@ Pacote base: `br.com.logi_track.aplicacao_api`
 | `controllers` | Endpoints REST |
 | `exception` | Erros da API e códigos HTTP |
 
-As pastas já estão criadas no projeto. A classe principal é `AplicacaoApiApplication`.
-
-Cada pasta da API fica com a responsabilidade dela (models, repositories, services, controllers e exception).
+Entry point: `AplicacaoApiApplication`.
 
 ## Banco
 

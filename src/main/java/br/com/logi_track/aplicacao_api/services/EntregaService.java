@@ -2,6 +2,7 @@ package br.com.logi_track.aplicacao_api.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +15,21 @@ import br.com.logi_track.aplicacao_api.exception.RecursoNaoEncontradoException;
 import br.com.logi_track.aplicacao_api.models.Entrega;
 import br.com.logi_track.aplicacao_api.models.Motorista;
 import br.com.logi_track.aplicacao_api.models.Pedido;
+import br.com.logi_track.aplicacao_api.models.Produto;
+import br.com.logi_track.aplicacao_api.models.Volume;
 import br.com.logi_track.aplicacao_api.repositories.CentroDistribuicaoRepository;
 import br.com.logi_track.aplicacao_api.repositories.EntregaRepository;
 import br.com.logi_track.aplicacao_api.repositories.MotoristaRepository;
 import br.com.logi_track.aplicacao_api.repositories.PedidoRepository;
+import br.com.logi_track.aplicacao_api.repositories.ProdutoRepository;
 import br.com.logi_track.aplicacao_api.repositories.TransportadoraRepository;
 import br.com.logi_track.aplicacao_api.repositories.VeiculoRepository;
 
 @Service
 public class EntregaService {
+
+	private static final String SITUACAO_EM_TRANSITO = "em_transito";
+	private static final String SITUACAO_ENTREGUE = "entregue";
 
 	private final EntregaRepository entregaRepository;
 	private final PedidoRepository pedidoRepository;
@@ -30,6 +37,7 @@ public class EntregaService {
 	private final VeiculoRepository veiculoRepository;
 	private final TransportadoraRepository transportadoraRepository;
 	private final CentroDistribuicaoRepository centroDistribuicaoRepository;
+	private final ProdutoRepository produtoRepository;
 
 	public EntregaService(
 			EntregaRepository entregaRepository,
@@ -37,13 +45,15 @@ public class EntregaService {
 			MotoristaRepository motoristaRepository,
 			VeiculoRepository veiculoRepository,
 			TransportadoraRepository transportadoraRepository,
-			CentroDistribuicaoRepository centroDistribuicaoRepository) {
+			CentroDistribuicaoRepository centroDistribuicaoRepository,
+			ProdutoRepository produtoRepository) {
 		this.entregaRepository = entregaRepository;
 		this.pedidoRepository = pedidoRepository;
 		this.motoristaRepository = motoristaRepository;
 		this.veiculoRepository = veiculoRepository;
 		this.transportadoraRepository = transportadoraRepository;
 		this.centroDistribuicaoRepository = centroDistribuicaoRepository;
+		this.produtoRepository = produtoRepository;
 	}
 
 	public Entrega criar(Entrega entrega) {
@@ -56,6 +66,11 @@ public class EntregaService {
 		if (entrega.getAtrasado() == null) {
 			entrega.setAtrasado(Boolean.FALSE);
 		}
+
+		if (SITUACAO_EM_TRANSITO.equals(entrega.getSituacao())) {
+			baixarEstoqueDoPedido(entrega.getIdPedido());
+		}
+
 		entrega.setCriadoEm(agora);
 		entrega.setAtualizadoEm(agora);
 		return entregaRepository.save(entrega);
@@ -97,6 +112,16 @@ public class EntregaService {
 	public Entrega atualizar(String id, Entrega dados) {
 		Entrega existente = buscarPorId(id);
 		validarReferencias(dados);
+
+		String situacaoAnterior = existente.getSituacao();
+		String situacaoNova = dados.getSituacao();
+		boolean passouParaEmTransito = !SITUACAO_EM_TRANSITO.equals(situacaoAnterior)
+				&& SITUACAO_EM_TRANSITO.equals(situacaoNova);
+
+		if (passouParaEmTransito) {
+			baixarEstoqueDoPedido(existente.getIdPedido());
+		}
+
 		existente.setPedido(dados.getPedido());
 		existente.setIdTransportadora(dados.getIdTransportadora());
 		existente.setMotorista(dados.getMotorista());
@@ -114,10 +139,56 @@ public class EntregaService {
 	}
 
 	public void excluir(String id) {
-		if (!entregaRepository.existsById(id)) {
-			throw new RecursoNaoEncontradoException("Entrega nao encontrada: " + id);
+		Entrega existente = buscarPorId(id);
+		String situacao = existente.getSituacao();
+		if (SITUACAO_EM_TRANSITO.equals(situacao) || SITUACAO_ENTREGUE.equals(situacao)) {
+			throw new NegocioException(
+					"Nao e permitido excluir entrega que ja saiu do CD.",
+					HttpStatus.BAD_REQUEST);
 		}
 		entregaRepository.deleteById(id);
+	}
+
+	private void baixarEstoqueDoPedido(String idPedido) {
+		Pedido pedido = pedidoRepository.findById(idPedido)
+				.orElseThrow(() -> new NegocioException(
+						"Pedido inexistente para baixa de estoque: " + idPedido,
+						HttpStatus.BAD_REQUEST));
+		if (pedido.getVolumes() == null || pedido.getVolumes().isEmpty()) {
+			throw new NegocioException("Pedido sem volumes para baixa de estoque.", HttpStatus.BAD_REQUEST);
+		}
+
+		Map<String, Integer> porProduto = somarPorProduto(pedido.getVolumes());
+		for (Map.Entry<String, Integer> entry : porProduto.entrySet()) {
+			Produto produto = produtoRepository.findById(entry.getKey())
+					.orElseThrow(() -> new NegocioException(
+							"Produto inexistente no volume: " + entry.getKey(),
+							HttpStatus.BAD_REQUEST));
+			int estoque = produto.getQuantidadeEstoque() == null ? 0 : produto.getQuantidadeEstoque();
+			int reservada = produto.getQuantidadeReservada() == null ? 0 : produto.getQuantidadeReservada();
+			int quantidade = entry.getValue();
+			if (estoque < quantidade || reservada < quantidade) {
+				throw new NegocioException(
+						"Estoque insuficiente para o produto: " + produto.getNome(),
+						HttpStatus.BAD_REQUEST);
+			}
+			produto.setQuantidadeEstoque(estoque - quantidade);
+			produto.setQuantidadeReservada(reservada - quantidade);
+			produtoRepository.save(produto);
+		}
+
+		pedido.setSituacao(SITUACAO_EM_TRANSITO);
+		pedido.setAtualizadoEm(LocalDateTime.now());
+		pedidoRepository.save(pedido);
+	}
+
+	private Map<String, Integer> somarPorProduto(List<Volume> volumes) {
+		Map<String, Integer> porProduto = new LinkedHashMap<>();
+		for (Volume volume : volumes) {
+			int qtd = volume.getQuantidade() == null ? 0 : volume.getQuantidade();
+			porProduto.merge(volume.getIdProduto(), qtd, Integer::sum);
+		}
+		return porProduto;
 	}
 
 	private void validarReferencias(Entrega entrega) {

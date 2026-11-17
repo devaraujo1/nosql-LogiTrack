@@ -22,7 +22,6 @@ public class Pedido {
 	@Id
 	private String id;
 
-	// referencia para o cliente (DocumentReference)
 	@DocumentReference
 	@Field(name = "idCliente", targetType = FieldType.OBJECT_ID)
 	@NotNull

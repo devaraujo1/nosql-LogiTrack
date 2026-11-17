@@ -53,14 +53,16 @@ criar("clientes", ["nome", "tipo", "documento", "email", "telefone", "endereco",
   atualizadoEm: { bsonType: "date" }
 });
 
-criar("produtos", ["nome", "codigo", "categoria", "pesoKg", "dimensoes", "fragil", "ativo"], {
+criar("produtos", ["nome", "codigo", "categoria", "pesoKg", "dimensoes", "fragil", "ativo", "quantidadeEstoque", "quantidadeReservada"], {
   nome: { bsonType: "string" },
   codigo: { bsonType: "string" },
   categoria: { bsonType: "string" },
   pesoKg: { bsonType: "double" },
   dimensoes: dimensoes,
   fragil: { bsonType: "bool" },
-  ativo: { bsonType: "bool" }
+  ativo: { bsonType: "bool" },
+  quantidadeEstoque: { bsonType: ["int", "long"] },
+  quantidadeReservada: { bsonType: ["int", "long"] }
 });
 
 criar("transportadoras", ["nome", "documento", "email", "telefone", "endereco", "ativo"], {

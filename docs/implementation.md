@@ -50,6 +50,11 @@ As regras mais importantes ficam no service.
 1. e-mail de cliente não pode repetir → 409
 2. pedido precisa ter volumes → 400
 3. entrega só com pedido e motorista existentes → 400
+4. estoque com reserva no produto:
+   - criar pedido reserva (`quantidadeReservada += qtd`) se disponível >= qtd; senão 400
+   - cancelar/excluir no CD libera a reserva
+   - sair do CD (`em_transito`) baixa estoque e reserva
+   - repor estoque (PUT produto) só altera `quantidadeEstoque`
 
 ## Integridade
 
@@ -58,4 +63,4 @@ Também evitamos o campo `_class` do Spring (`MongoConfig`), porque o validator 
 
 ## Mudança em relação à modelagem
 
-Não mudamos collections nem embed/reference. Só adaptamos para o Spring gravar as refs como ObjectId e usar `@DocumentReference` onde o enunciado pede.
+Não criamos collection de estoque. Em `produtos` ficam `quantidadeEstoque` e `quantidadeReservada`. Embed/reference das outras entidades permanecem iguais.
